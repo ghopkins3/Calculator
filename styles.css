@@ -3,6 +3,7 @@
     margin: 0;
 }
 
+
 #header {
     text-align: center;
     background-color: lightblue;
@@ -17,4 +18,36 @@
     padding-top: 1vh;
     font-size: 18px;
 }
+
+#shell { 
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    margin-top: 50px;
+    margin-bottom: 100px;
+    width: 400px;
+    height: 800px;
+}
+
+#display {
+    background-color: #0f1923;
+    background-color: 2px solid black;
+    width: 400px;
+    height: 290px;
+    border-top-right-radius: 50px;
+    border-top-left-radius: 50px;
+}
+
+#keypad {
+    background-color: #142130;
+    background-color: 2px solid black;
+    width: 400px;
+    height: 510px;
+    border-bottom-right-radius: 50px;
+    border-bottom-left-radius: 50px;
+}
+
+
+
+
 

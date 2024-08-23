@@ -7,7 +7,7 @@
 #header {
     text-align: center;
     background-color: lightblue;
-    height: 18vh;
+    height: 15vh;
 }
 
 #heading {
@@ -23,7 +23,7 @@
     display: flex;
     flex-direction: column;
     margin: auto;
-    margin-top: 50px;
+    margin-top: 30px;
     margin-bottom: 100px;
     width: 400px;
     height: 800px;
@@ -36,18 +36,133 @@
     height: 290px;
     border-top-right-radius: 50px;
     border-top-left-radius: 50px;
+    box-shadow: 0px -8px 2px -2px black;
+    
 }
 
+.test {
+    display: flex;
+    color: white;
+    border: 2px solid red;
+    padding-left: 40px;
+    padding-top: 10px;
+}
+
+#signal {
+    margin-left: 170px;
+}
+
+.test p {
+    border: 2px solid green;
+}
+
+.math-display {
+    margin-top: 115px;
+    margin-right: 10px;
+    margin-left: 10px;
+    height: 135px;
+    position: relative;
+}
+
+#operations {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    color: white;
+    font-size: 60px;
+}
+
+
+
 #keypad {
+    display: flex;
+    justify-content: end;
     background-color: #142130;
     background-color: 2px solid black;
     width: 400px;
     height: 510px;
     border-bottom-right-radius: 50px;
     border-bottom-left-radius: 50px;
+    box-shadow: 0px 8px 2px -2px black;
 }
 
+.operators { 
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    color: white;
+    margin-top: 40px;
+    margin-right: 40px;
+}
 
+button {
+    width: 70px;
+    height: 70px;
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 4px 2px -2px black;
+    font-size: 44px;
+    color: white;
+}
 
+.operators button {
+    background: radial-gradient(#236eb1, #143f67);
+}
 
+button:hover {
+    cursor: pointer;
+    border: 3px solid black;
+}
 
+#equals {
+    background: radial-gradient(#c2de69, #8fb370);
+}
+
+.inputs {
+    margin-top: 40px;
+    width: 255px;
+    height: 350px;
+}
+
+#options {
+    display: flex;
+    gap: 15px;
+}
+
+#top-numbers {
+    display: flex;
+    padding-top: 25px;
+    gap: 15px;
+}
+
+#middle-numbers {
+    display: flex;
+    padding-top: 25px;
+    gap: 15px;
+}
+
+#bottom-numbers {
+    display: flex;
+    padding-top: 25px;
+    gap: 15px;
+}
+
+#zero-decimal {
+    display: flex;
+    padding-top: 25px;
+    gap: 15px;
+}
+
+#zero {
+    padding-left: 24px;
+    text-align:justify;
+    width: 155px;
+}
+
+.inputs button {
+    background: radial-gradient(#284157, #1d2e3e);
+}
+
+#options button {
+    background: radial-gradient(#236eb1, #143f67);
+}

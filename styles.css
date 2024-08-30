@@ -52,7 +52,7 @@ body {
     color: white;
     padding-left: 40px;
     padding-top: 10px;
-    gap: 8px;
+    gap: 4px;
 }
 
 .top-icons img {
@@ -60,27 +60,29 @@ body {
 }
 
 #signal {
-    margin-left: 160px;
+    margin-left: 185px;
 }
 
 #time {
+    margin-left: 10px;
     font-size: 18px;
+    font-weight: bold;
 }
 
 .math-display {
-    margin-top: 115px;
-    margin-right: 10px;
-    margin-left: 10px;
-    height: 135px;
+    margin-top: 140px;
+    margin-right: 42px;
+    margin-left: 42px;
+    height: 90px;
     position: relative;
 }
 
 #io {
     position: absolute;
-    bottom: 0;
+    bottom: 1;
     right: 0;
     color: white;
-    font-size: 60px;
+    font-size: 95px;
 }
 
 #keypad {
@@ -96,33 +98,32 @@ body {
 .operators { 
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    gap: 15px;
     color: white;
-    margin-top: 40px;
-    margin-right: 36px;
+    margin-right: 25px;
+    margin-left: 15px;
 }
 
 button {
-    width: 70px;
-    height: 70px;
-    border-radius: 15px;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
     border: none;
-    box-shadow: 0 4px 2px -2px black;
-    font-size: 44px;
+    font-size: 40px;
     color: white;
 }
 
 .operators button {
     background: orange;
+    transition: all 0.4s ease;
 }
 
 button:hover {
     cursor: pointer;
-    border: 3px solid black;
+    filter: contrast(30%) brightness(150%);
 }
 
 .inputs {
-    margin-top: 40px;
     width: 255px;
     height: 350px;
 }
@@ -134,32 +135,36 @@ button:hover {
 
 #top-numbers {
     display: flex;
-    padding-top: 25px;
+    padding-top: 15px;
     gap: 15px;
 }
 
 #middle-numbers {
     display: flex;
-    padding-top: 25px;
+    padding-top: 15px;
     gap: 15px;
 }
 
 #bottom-numbers {
     display: flex;
-    padding-top: 25px;
+    padding-top: 15px;
     gap: 15px;
 }
 
 #zero-decimal {
     display: flex;
-    padding-top: 25px;
+    padding-top: 15px;
     gap: 15px;
 }
 
 #zero {
-    padding-left: 24px;
-    text-align:justify;
-    width: 155px;
+    padding-left: 25px;
+    text-align: justify;
+    width: 180px;
+    border-top-left-radius: 50px;
+    border-top-right-radius: 50px;
+    border-bottom-left-radius: 50px;
+    border-bottom-right-radius: 50px;
 }
 
 .inputs button {
@@ -168,4 +173,13 @@ button:hover {
 
 #options button {
     background: gray;
+}
+
+.swipe-bar {
+    border: 2px solid white;
+    width: 120px;
+    background-color: white;
+    margin-top: 35px;
+    border-radius: 50px;
+    margin-left: 115px;
 }

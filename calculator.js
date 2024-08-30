@@ -7,80 +7,54 @@ const backspaceBtn = document.querySelector("#backspace");
 const operatorBtns = document.querySelectorAll(".operators");
 const equalsBtn = document.querySelector("#equals");
 const numpad = document.querySelector(".inputs");
+let inputs = [];
 
 document.addEventListener("keydown", () => {
     handleKeyPress(event);
 });
 
 operatorBtns.forEach((button) => {
-    button.addEventListener("click", () => {
-        inputs = inputDisplay.textContent.split(" ");
-        if(event.target.classList.contains("operator")) {
-            if(inputs.length === 3) {
-                getInputs();
-                if(operate(x, op, y) === "Overflow") {
-                    return;
-                } else {
-                    operate(x, op, y);
-                }
-            } else if(inputDisplay.textContent.length >= 12 || inputDisplay.textContent === "nice try!" || inputDisplay.textContent === "Overflow") {
-                return;
-            }
-            inputDisplay.textContent = inputDisplay.textContent + " " + event.target.textContent + " ";
-        }
+    button.addEventListener("mousedown", () => {
+        inputs.push(inputDisplay.textContent);
+        inputs.push(event.target.textContent);
+        
+        inputDisplay.textContent = "0";
+        console.log(inputs);
     });
+
+    button.addEventListener("mouseup", () => {
+        if(event.target.classList.contains("operator")) { 
+            event.target.style.backgroundColor = "white";
+            event.target.style.color = "orange";
+        }
+    })
 });
 
 equalsBtn.addEventListener("click", () => {
-    getInputs();
-    operate(x, op, y);
+
 });
 
 numBtns.forEach((button) => {
     button.addEventListener("click", () => {
-        if(event.target.classList.contains("number") || event.target.classList.contains("decimal")) {
-            if(inputDisplay.textContent === "0" || inputDisplay.textContent === "nice try!" || inputDisplay.textContent === "Overflow") {
-                inputDisplay.textContent = event.target.textContent;
-            } else if(inputDisplay.textContent.length >= 12 || inputDisplay.textContent === "Overflow") {
-                return;
-            } else {
-                inputDisplay.textContent += event.target.textContent;
-            }
+        if(inputDisplay.textContent === "0") {
+            inputDisplay.textContent = event.target.textContent;
+        } else {
+            inputDisplay.textContent += event.target.textContent;
         }
     });
 });
 
 clearBtn.addEventListener("click", () => {
     inputDisplay.textContent = "0";
+    inputs = [];
 });
 
 signBtn.addEventListener("click", () => {
-    let inputs = inputDisplay.textContent.split(" ");
-    if(inputDisplay.textContent !== null || inputDisplay.textContent !== "") {
-        if(inputs.length === 1) {
-            x = parseFloat(inputs[0]);
-            if(!isNaN(x)) {
-                x = x - (x * 2);
-                inputDisplay.textContent = x;
-            }
-        } else if(inputs.length === 3) {
-            y = parseFloat(inputs[2]);
-            if(!isNaN(y)) {
-                y = y - (y * 2);
-                inputDisplay.textContent = inputs[0] + " " + inputs[1] + " " + y;
-            }
-        }
-    }
+    
 });
 
 backspaceBtn.addEventListener("click", () => {
-    if(inputDisplay.textContent !== null || inputDisplay.textContent !== "") {
-        if(inputDisplay.textContent.endsWith(" ")) {
-            inputDisplay.textContent = inputDisplay.textContent.slice(0, -2);
-        }
-
-       inputDisplay.textContent = inputDisplay.textContent.slice(0, -1);
-    }
+    inputDisplay.textContent = inputDisplay.textContent.slice(0, -1);
 });
 
 
@@ -172,21 +146,18 @@ function showTime() {
     let time = new Date();
     let hour = time.getHours();
     let minute = time.getMinutes();
-    let meridiem = "am";
 
     if(hour >= 12) {
         if(hour > 12) hour -= 12;
-        meridiem = "pm";
     } else if(hour == 0) {
         hour = 12;
-        meridiem = "am";
     }
 
     if(minute < 10) {
         minute = "0" + minute;
     }
 
-    let currentTime = hour + ":" + minute + " " + meridiem;
+    let currentTime = hour + ":" + minute + " ";
     dateDisplay.textContent = currentTime;
 }
 

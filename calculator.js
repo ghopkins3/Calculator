@@ -14,14 +14,16 @@ document.addEventListener("keydown", () => {
 
 operatorBtns.forEach((button) => {
     button.addEventListener("click", () => {
-        let inputs = inputDisplay.textContent.split(" ");
+        inputs = inputDisplay.textContent.split(" ");
         if(event.target.classList.contains("operator")) {
             if(inputs.length === 3) {
-                x = parseFloat(inputs[0]);
-                op = inputs[1];
-                y = parseFloat(inputs[2]);
-                operate(x, op, y);
-            } else if(inputDisplay.textContent.length >= 12) {
+                getInputs();
+                if(operate(x, op, y) === "Overflow") {
+                    return;
+                } else {
+                    operate(x, op, y);
+                }
+            } else if(inputDisplay.textContent.length >= 12 || inputDisplay.textContent === "nice try!" || inputDisplay.textContent === "Overflow") {
                 return;
             }
             inputDisplay.textContent = inputDisplay.textContent + " " + event.target.textContent + " ";
@@ -30,20 +32,16 @@ operatorBtns.forEach((button) => {
 });
 
 equalsBtn.addEventListener("click", () => {
-    let inputs = inputDisplay.textContent.split(" ");
-    x = parseFloat(inputs[0]);
-    op = inputs[1];
-    y = parseFloat(inputs[2]);
-
+    getInputs();
     operate(x, op, y);
 });
 
 numBtns.forEach((button) => {
     button.addEventListener("click", () => {
         if(event.target.classList.contains("number") || event.target.classList.contains("decimal")) {
-            if(inputDisplay.textContent === "0") {
+            if(inputDisplay.textContent === "0" || inputDisplay.textContent === "nice try!" || inputDisplay.textContent === "Overflow") {
                 inputDisplay.textContent = event.target.textContent;
-            } else if(inputDisplay.textContent.length >= 12) {
+            } else if(inputDisplay.textContent.length >= 12 || inputDisplay.textContent === "Overflow") {
                 return;
             } else {
                 inputDisplay.textContent += event.target.textContent;
@@ -60,13 +58,13 @@ signBtn.addEventListener("click", () => {
     let inputs = inputDisplay.textContent.split(" ");
     if(inputDisplay.textContent !== null || inputDisplay.textContent !== "") {
         if(inputs.length === 1) {
-            let x = parseInt(inputs[0]);
+            x = parseFloat(inputs[0]);
             if(!isNaN(x)) {
                 x = x - (x * 2);
                 inputDisplay.textContent = x;
             }
         } else if(inputs.length === 3) {
-            let y = parseInt(inputs[2]);
+            y = parseFloat(inputs[2]);
             if(!isNaN(y)) {
                 y = y - (y * 2);
                 inputDisplay.textContent = inputs[0] + " " + inputs[1] + " " + y;
@@ -117,6 +115,13 @@ function multiply(x, y) {
     return x * y;
 }
 
+function getInputs() {
+    inputs = inputDisplay.textContent.split(" ");
+    x = parseFloat(inputs[0]);
+    op = inputs[1];
+    y = parseFloat(inputs[2]);
+}
+
 function splitOnDecimal(decimalNumber) {
     return decimalNumber.toString().split(".");
 }
@@ -145,13 +150,16 @@ function operate(x, op, y) {
         result = subtract(x, y);
     } else if(op === "÷") {
         result = divide(x, y);
+        if(result === "nice try!") {
+            inputDisplay.textContent = result;
+        }
     } else if(op === "x") {
         result = multiply(x, y);
     }
-
+    
     result = result.toFixed(calculatePrecision(x, y));
 
-    if(result.length > 10) {
+    if(result.length >= 12) {
         inputDisplay.textContent = "Overflow";
     } else {
         inputDisplay.textContent = result;
@@ -185,7 +193,7 @@ function showTime() {
 function handleKeyPress(event) {
     let inputs = inputDisplay.textContent.split(" ");
     if((event.key >= 0 && event.key <= 9) || event.key === ".") {
-        if(inputDisplay.textContent === "0") {
+        if(inputDisplay.textContent === "0" || inputDisplay.textContent === "nice try!" || inputDisplay.textContent === "Overflow") {
             inputDisplay.textContent = event.key;
         } else if(inputDisplay.textContent.length >= 12) {
             return;
@@ -193,31 +201,37 @@ function handleKeyPress(event) {
             inputDisplay.textContent += event.key;
         }
     } else if(event.key === "+" || event.key === "-" || event.key === "/" || event.key === "*") {
+        if(inputs.length === 3) {
+            getInputs();
+            operate(x, op, y);
+            inputDisplay.textContent = inputDisplay.textContent + " " + event.key + " ";
+        }
         if(event.key === "/") {
-            inputDisplay.textContent = inputDisplay.textContent + " ÷"  + " ";
+            if(inputs.length === 3) {
+                getInputs();
+                operate(x, op, y);
+            }
+            inputDisplay.textContent = inputDisplay.textContent + " " + "÷" + " ";
         } else if(event.key === "*") {
-            inputDisplay.textContent = inputDisplay.textContent + " x" + " ";
+            if(inputs.length === 3) {
+                getInputs();
+                operate(x, op, y);
+            }
+            inputDisplay.textContent = inputDisplay.textContent + " " + "x" + " ";
+        } else if(inputs.length == 3) {
+            return;
         } else {
             inputDisplay.textContent = inputDisplay.textContent + " " + event.key + " ";
-        } 
+        }
+
     } else if(event.key === "Enter") {
-        x = parseFloat(inputs[0]);
-        op = inputs[1];
-        y = parseFloat(inputs[2]);
+        getInputs();
         operate(x, op, y);
+
     } else if(event.key === "Escape") {
         inputDisplay.textContent = "0";
     }
 
-    // Logic to use for operators
-    if(inputs.length === 3) {
-        x = parseFloat(inputs[0]);
-        op = inputs[1];
-        y = parseFloat(inputs[2]);
-        operate(x, op, y);
-    } else if(inputDisplay.textContent.length >= 12) {
-        return;
-    }
 }
 
 showTime();

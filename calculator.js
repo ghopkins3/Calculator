@@ -13,44 +13,92 @@ document.addEventListener("keydown", () => {
     handleKeyPress(event);
 });
 
+
+let selectedButton = null;
 operatorBtns.forEach((button) => {
-    button.addEventListener("mousedown", () => {
-        inputs.push(inputDisplay.textContent);
-        inputs.push(event.target.textContent);
-        
-        inputDisplay.textContent = "0";
-        console.log(inputs);
-    });
-
-    button.addEventListener("mouseup", () => {
-        if(event.target.classList.contains("operator")) { 
-            event.target.style.backgroundColor = "white";
-            event.target.style.color = "orange";
-        }
-    })
-});
-
-equalsBtn.addEventListener("click", () => {
-
-});
-
-numBtns.forEach((button) => {
     button.addEventListener("click", () => {
-        if(inputDisplay.textContent === "0") {
-            inputDisplay.textContent = event.target.textContent;
-        } else {
-            inputDisplay.textContent += event.target.textContent;
+        if(event.target.classList.contains("operator")) {
+            if(inputs.length !== 1) {
+                inputs.push(parseFloat(inputDisplay.textContent));
+            }
+            if(selectedButton) {
+                selectedButton.style.backgroundColor = "orange";
+                selectedButton.style.color = "white";
+            }
+
+            selectedButton = event.target;
+            selectedButton.style.backgroundColor = "white";
+            selectedButton.style.color = "orange";
         }
     });
 });
+
+equalsBtn.addEventListener("mousedown", () => {
+    inputs.push(buttonToPush.textContent);
+    inputs.push(parseFloat(inputDisplay.textContent));
+    console.log(inputs);
+    operate(inputs[0], inputs[1], inputs[2]);
+    console.log(inputs);
+    clearCache();
+    console.log(inputs);
+    inputs.push(parseFloat(result));
+    console.log(inputs);
+    
+});
+
+let buttonToPush = null;
+numBtns.forEach((button) => {
+    button.addEventListener("click", (event) => {
+        if(event.target.classList.contains("number") || event.target.classList.contains("decimal")) {
+            if(inputDisplay.textContent === "0" || selectedButton) {
+                inputDisplay.textContent = event.target.textContent;
+            } else if(inputDisplay.textContent.length === 9) {
+                return;
+            } else if(inputDisplay.textContent.includes(".") && event.target.textContent === ".") {
+                return;
+            } else {
+                inputDisplay.textContent += event.target.textContent;
+            }
+
+            if(inputDisplay.textContent.length === 7) {
+                inputDisplay.style.fontSize = "90px";
+            } else if(inputDisplay.textContent.length === 8) {
+                inputDisplay.style.fontSize = "78px";
+            } else if(inputDisplay.textContent.length === 9) {
+                inputDisplay.style.fontSize = "68px";
+            }
+
+            if(selectedButton) {
+                buttonToPush = selectedButton;
+                inputDisplay.style.fontSize = "95px";
+                selectedButton.style.backgroundColor = "orange";
+                selectedButton.style.color = "white";
+                selectedButton = null;
+            }
+
+        }
+    });
+});
+
 
 clearBtn.addEventListener("click", () => {
     inputDisplay.textContent = "0";
+    inputDisplay.style.fontSize = "95px";
     inputs = [];
+    
+    if(selectedButton) {
+        selectedButton.style.backgroundColor = "orange";
+        selectedButton.style.color = "white";
+        selectedButton = null;
+    }
 });
 
 signBtn.addEventListener("click", () => {
-    
+    let num = inputDisplay.textContent;
+    if(!isNaN(num)) {
+        num = num - (num * 2);
+    }
+    inputDisplay.textContent = num;
 });
 
 backspaceBtn.addEventListener("click", () => {
@@ -133,7 +181,20 @@ function operate(x, op, y) {
     
     result = result.toFixed(calculatePrecision(x, y));
 
-    if(result.length >= 12) {
+    if(result.length === 7) {
+        inputDisplay.style.fontSize = "90px";
+    } else if(result.length === 8) {
+        inputDisplay.style.fontSize = "78px";
+    } else if(result.length === 9) {
+        inputDisplay.style.fontSize = "68px";
+    }
+
+    if(result.length > 9) {
+        let sciNotation = parseFloat(result).toExponential(5).replace("+", "")
+        sciNotation = parseFloat(sciNotation).toExponential().replace("+", "");
+        inputDisplay.textContent = sciNotation;
+        inputDisplay.style.fontSize = "74px";
+    } else if(result.length >= 12) {
         inputDisplay.textContent = "Overflow";
     } else {
         inputDisplay.textContent = result;
@@ -161,6 +222,14 @@ function showTime() {
     dateDisplay.textContent = currentTime;
 }
 
+function clearCache() {
+    inputs = [];
+}
+
+// TODO 
+// Add keyboard functionality
+
+/*
 function handleKeyPress(event) {
     let inputs = inputDisplay.textContent.split(" ");
     if((event.key >= 0 && event.key <= 9) || event.key === ".") {
@@ -204,6 +273,7 @@ function handleKeyPress(event) {
     }
 
 }
+*/
 
 showTime();
 setInterval(showTime, 1000);

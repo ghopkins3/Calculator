@@ -35,7 +35,7 @@ body {
     margin-bottom: 30px;
     width: 400px;
     height: 800px;
-    box-shadow: 0px 0px 1px 6px #262523;
+    box-shadow: 0px 0px 1px 8px #262523;
     border-radius: 50px;
 }
 
@@ -71,18 +71,15 @@ body {
 
 .math-display {
     margin-top: 140px;
-    margin-right: 42px;
-    margin-left: 42px;
+    margin-left: 35px;
+    width: 325px;
     height: 90px;
     position: relative;
-}
-
-#io {
-    position: absolute;
-    bottom: 1;
-    right: 0;
-    color: white;
     font-size: 95px;
+    line-height: 90px;
+    text-align: end;
+    background-color: black;
+    color: white;
 }
 
 #keypad {
@@ -111,11 +108,11 @@ button {
     border: none;
     font-size: 40px;
     color: white;
+    transition: 0.2s ease-in-out;
 }
 
 .operators button {
     background: orange;
-    transition: all 0.4s ease;
 }
 
 button:hover {

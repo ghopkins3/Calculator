@@ -96,7 +96,6 @@ body {
     display: flex;
     flex-direction: column;
     gap: 15px;
-    color: white;
     margin-right: 25px;
     margin-left: 15px;
 }
@@ -113,6 +112,7 @@ button {
 
 .operators button {
     background: orange;
+    color: white;
 }
 
 button:hover {

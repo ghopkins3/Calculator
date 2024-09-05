@@ -26,9 +26,21 @@ operatorBtns.forEach((button) => {
                 console.log("inputs.length === 1, inputs: " + inputs);
                 console.log("event target input = 1 : " + event.target.textContent);
                 console.log("button to push: " + buttonToPush.textContent);
+                console.log("TEST");
                 inputs.push(buttonToPush.textContent);
                 inputs.push(parseFloat(inputDisplay.textContent));
                 console.log(inputs);
+                console.log("BRBRBSRSR");
+                operate(inputs[0], inputs[1], inputs[2]);
+                clearCache();
+                console.log("event target input = 1, after operate: " + event.target.textContent);
+                inputs.push(parseFloat(result));
+                inputs.push(event.target.textContent);
+                console.log(inputs);
+            } else if(inputs.length === 2) {
+                inputs.push(parseFloat(inputDisplay.textContent));
+                console.log(inputs);
+                console.log("BRBRBSRSR");
                 operate(inputs[0], inputs[1], inputs[2]);
                 clearCache();
                 console.log("event target input = 1, after operate: " + event.target.textContent);
@@ -59,6 +71,7 @@ equalsBtn.addEventListener("mousedown", () => {
 
     inputs.push(parseFloat(inputDisplay.textContent));
     console.log("1: " + inputs);
+    console.log("HERE");
     operate(inputs[0], inputs[1], inputs[2]);
     console.log("2: " + inputs);
     clearCache();

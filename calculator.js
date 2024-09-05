@@ -8,6 +8,7 @@ const operatorBtns = document.querySelectorAll(".operators");
 const equalsBtn = document.querySelector("#equals");
 const numpad = document.querySelector(".inputs");
 let inputs = [];
+const operators = ["+", "-", "x", "÷"];
 
 document.addEventListener("keydown", () => {
     handleKeyPress(event);
@@ -17,44 +18,27 @@ let selectedButton = null;
 operatorBtns.forEach((button) => {
     button.addEventListener("click", (event) => {
         if(event.target.classList.contains("operator")) {
-            console.log("event targets: " + event.target.textContent);
             if(inputs.length === 0) {
-                console.log("length === 0, length: " + inputs.length);
-                console.log("event target: " + event.target.textContent);
+                console.log("inputs length === 0");
                 inputs.push(parseFloat(inputDisplay.textContent));
-            } else if(inputs.length === 1) {
-                console.log("inputs.length === 1, inputs: " + inputs);
-                console.log("event target input = 1 : " + event.target.textContent);
-                console.log("button to push: " + buttonToPush.textContent);
-                console.log("TEST");
-                inputs.push(buttonToPush.textContent);
-                inputs.push(parseFloat(inputDisplay.textContent));
-                console.log(inputs);
-                console.log("BRBRBSRSR");
-                operate(inputs[0], inputs[1], inputs[2]);
-                clearCache();
-                console.log("event target input = 1, after operate: " + event.target.textContent);
-                inputs.push(parseFloat(result));
                 inputs.push(event.target.textContent);
                 console.log(inputs);
+
+            } else if(inputs.length === 1) {
+                inputs.push(event.target.textContent);
+
             } else if(inputs.length === 2) {
                 inputs.push(parseFloat(inputDisplay.textContent));
-                console.log(inputs);
-                console.log("BRBRBSRSR");
                 operate(inputs[0], inputs[1], inputs[2]);
                 clearCache();
-                console.log("event target input = 1, after operate: " + event.target.textContent);
                 inputs.push(parseFloat(result));
                 inputs.push(event.target.textContent);
-                console.log(inputs);
             }
 
 
             if(selectedButton) {
                 selectedButton.style.backgroundColor = "orange";
                 selectedButton.style.color = "white";
-                console.log("selected button from selected button: " + selectedButton.textContent);
-                console.log("event target from selected button: " + event.target.textContent);
             }
 
             selectedButton = event.target;
@@ -67,17 +51,17 @@ operatorBtns.forEach((button) => {
 equalsBtn.addEventListener("mousedown", () => {
     if(inputs.length !== 2) {
         inputs.push(buttonToPush.textContent);
-    }
+    } 
 
     inputs.push(parseFloat(inputDisplay.textContent));
-    console.log("1: " + inputs);
-    console.log("HERE");
     operate(inputs[0], inputs[1], inputs[2]);
-    console.log("2: " + inputs);
     clearCache();
-    console.log("3: " + inputs);
     inputs.push(parseFloat(result));
-    console.log("4: " + inputs);
+
+    if(selectedButton) {
+        selectedButton.style.backgroundColor = "orange";
+        selectedButton.style.color = "white";
+    }
     
 });
 

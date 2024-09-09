@@ -19,12 +19,7 @@ body {
 #heading {
     padding-top: 4vh;
     color: white;
-}
-
-#subheading {
-    padding-top: 1vh;
-    font-size: 18px;
-    color: white;
+    font-size: 48px;
 }
 
 #shell { 

@@ -8,33 +8,41 @@ const operatorBtns = document.querySelectorAll(".operators");
 const equalsBtn = document.querySelector("#equals");
 const numpad = document.querySelector(".inputs");
 let inputs = [];
-const operators = ["+", "-", "x", "÷"];
+let firstOperand = null;
+let secondOperand = null;
+let selectedButton = null;
+let firstOperator = null;
+let secondOperator = null;
 
 document.addEventListener("keydown", () => {
     handleKeyPress(event);
 });
 
-let selectedButton = null;
 operatorBtns.forEach((button) => {
     button.addEventListener("click", (event) => {
         if(event.target.classList.contains("operator")) {
-            if(inputs.length === 0) {
-                console.log("inputs length === 0");
-                inputs.push(parseFloat(inputDisplay.textContent));
-                inputs.push(event.target.textContent);
-                console.log(inputs);
+            
+            firstOperator = event.target.textContent;
+            console.log("first operator: " + firstOperator);
 
-            } else if(inputs.length === 1) {
-                inputs.push(event.target.textContent);
-
-            } else if(inputs.length === 2) {
-                inputs.push(parseFloat(inputDisplay.textContent));
-                operate(inputs[0], inputs[1], inputs[2]);
-                clearCache();
-                inputs.push(parseFloat(result));
-                inputs.push(event.target.textContent);
+            if(secondOperator === null) {
+                console.log("test");
+                firstOperand = parseFloat(inputDisplay.textContent);
             }
 
+            if(firstOperand && firstOperator && secondOperator !== null) {
+                secondOperand = parseFloat(inputDisplay.textContent);
+            
+                operate(firstOperand, secondOperator, secondOperand);
+
+                // 
+
+                firstOperand = null;
+                secondOperand = null;
+                secondOperator = null;
+                firstOperand = parseFloat(result);
+
+            }
 
             if(selectedButton) {
                 selectedButton.style.backgroundColor = "orange";
@@ -44,19 +52,18 @@ operatorBtns.forEach((button) => {
             selectedButton = event.target;
             selectedButton.style.backgroundColor = "white";
             selectedButton.style.color = "orange";
+
         }
     });
 });
 
-equalsBtn.addEventListener("mousedown", () => {
-    if(inputs.length !== 2) {
-        inputs.push(buttonToPush.textContent);
-    } 
+equalsBtn.addEventListener("click", () => {
+    secondOperand = parseFloat(inputDisplay.textContent);
+    operate(firstOperand, firstOperator, secondOperand);
 
-    inputs.push(parseFloat(inputDisplay.textContent));
-    operate(inputs[0], inputs[1], inputs[2]);
-    clearCache();
-    inputs.push(parseFloat(result));
+    firstOperand = null;
+    secondOperand = null;
+    firstOperator = null;
 
     if(selectedButton) {
         selectedButton.style.backgroundColor = "orange";
@@ -65,7 +72,7 @@ equalsBtn.addEventListener("mousedown", () => {
     
 });
 
-let buttonToPush = null;
+
 numBtns.forEach((button) => {
     button.addEventListener("click", (event) => {
         if(event.target.classList.contains("number") || event.target.classList.contains("decimal")) {
@@ -87,8 +94,10 @@ numBtns.forEach((button) => {
                 inputDisplay.style.fontSize = "68px";
             }
 
+            secondOperator = firstOperator;
+            console.log("second op from num press: " + secondOperator);
+
             if(selectedButton) {
-                buttonToPush = selectedButton;
                 inputDisplay.style.fontSize = "95px";
                 selectedButton.style.backgroundColor = "orange";
                 selectedButton.style.color = "white";
@@ -99,11 +108,13 @@ numBtns.forEach((button) => {
     });
 });
 
-
 clearBtn.addEventListener("click", () => {
     inputDisplay.textContent = "0";
     inputDisplay.style.fontSize = "95px";
     inputs = [];
+    firstOperand = null;
+    secondOperand = null;
+    firstOperator = null;
     
     if(selectedButton) {
         selectedButton.style.backgroundColor = "orange";
@@ -121,6 +132,15 @@ signBtn.addEventListener("click", () => {
 });
 
 backspaceBtn.addEventListener("click", () => {
+    if(inputDisplay.textContent === "nice try!" || 
+        inputDisplay.textContent === "Overflow" || 
+        inputDisplay.textContent === "Infinity" ||
+        inputDisplay.textContent === "0") {
+        return;
+    } else if(inputDisplay.textContent === "") {
+        inputDisplay.textContent = "0";
+    } 
+
     inputDisplay.textContent = inputDisplay.textContent.slice(0, -1);
 });
 
@@ -241,58 +261,10 @@ function showTime() {
     dateDisplay.textContent = currentTime;
 }
 
-function clearCache() {
-    inputs = [];
+function clearOperands() {
+    firstOperand = null;
+    secondOperand = null;
 }
-
-// TODO 
-// Add keyboard functionality
-
-/*
-function handleKeyPress(event) {
-    let inputs = inputDisplay.textContent.split(" ");
-    if((event.key >= 0 && event.key <= 9) || event.key === ".") {
-        if(inputDisplay.textContent === "0" || inputDisplay.textContent === "nice try!" || inputDisplay.textContent === "Overflow") {
-            inputDisplay.textContent = event.key;
-        } else if(inputDisplay.textContent.length >= 12) {
-            return;
-        } else {
-            inputDisplay.textContent += event.key;
-        }
-    } else if(event.key === "+" || event.key === "-" || event.key === "/" || event.key === "*") {
-        if(inputs.length === 3) {
-            getInputs();
-            operate(x, op, y);
-            inputDisplay.textContent = inputDisplay.textContent + " " + event.key + " ";
-        }
-        if(event.key === "/") {
-            if(inputs.length === 3) {
-                getInputs();
-                operate(x, op, y);
-            }
-            inputDisplay.textContent = inputDisplay.textContent + " " + "÷" + " ";
-        } else if(event.key === "*") {
-            if(inputs.length === 3) {
-                getInputs();
-                operate(x, op, y);
-            }
-            inputDisplay.textContent = inputDisplay.textContent + " " + "x" + " ";
-        } else if(inputs.length == 3) {
-            return;
-        } else {
-            inputDisplay.textContent = inputDisplay.textContent + " " + event.key + " ";
-        }
-
-    } else if(event.key === "Enter") {
-        getInputs();
-        operate(x, op, y);
-
-    } else if(event.key === "Escape") {
-        inputDisplay.textContent = "0";
-    }
-
-}
-*/
 
 showTime();
 setInterval(showTime, 1000);

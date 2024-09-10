@@ -7,7 +7,6 @@ const backspaceBtn = document.querySelector("#backspace");
 const operatorBtns = document.querySelectorAll(".operators");
 const equalsBtn = document.querySelector("#equals");
 const numpad = document.querySelector(".inputs");
-let inputs = [];
 let firstOperand = null;
 let secondOperand = null;
 let selectedButton = null;
@@ -23,10 +22,8 @@ operatorBtns.forEach((button) => {
         if(event.target.classList.contains("operator")) {
             
             firstOperator = event.target.textContent;
-            console.log("first operator: " + firstOperator);
-
+            
             if(secondOperator === null) {
-                console.log("test");
                 firstOperand = parseFloat(inputDisplay.textContent);
             }
 
@@ -35,11 +32,10 @@ operatorBtns.forEach((button) => {
             
                 operate(firstOperand, secondOperator, secondOperand);
 
-                // 
+                // Second operator has to be set to null to skip this statement
+                // Otherwise user can keep pressing any operator to perform unintended calculations
 
-                firstOperand = null;
-                secondOperand = null;
-                secondOperator = null;
+                clearOperandsandSecondOperator();
                 firstOperand = parseFloat(result);
 
             }
@@ -53,18 +49,22 @@ operatorBtns.forEach((button) => {
             selectedButton.style.backgroundColor = "white";
             selectedButton.style.color = "orange";
 
+            console.log("first operator: " + firstOperator);
+            console.log("second operator: " + secondOperator);
+
         }
     });
 });
 
 equalsBtn.addEventListener("click", () => {
+
+    console.log("first operator: " + firstOperator);
+    console.log("second operator: " + secondOperator);
     secondOperand = parseFloat(inputDisplay.textContent);
     operate(firstOperand, firstOperator, secondOperand);
-
-    firstOperand = null;
-    secondOperand = null;
-    firstOperator = null;
-
+    clearAll();
+    firstOperand = parseFloat(result);
+    
     if(selectedButton) {
         selectedButton.style.backgroundColor = "orange";
         selectedButton.style.color = "white";
@@ -95,7 +95,6 @@ numBtns.forEach((button) => {
             }
 
             secondOperator = firstOperator;
-            console.log("second op from num press: " + secondOperator);
 
             if(selectedButton) {
                 inputDisplay.style.fontSize = "95px";
@@ -111,10 +110,7 @@ numBtns.forEach((button) => {
 clearBtn.addEventListener("click", () => {
     inputDisplay.textContent = "0";
     inputDisplay.style.fontSize = "95px";
-    inputs = [];
-    firstOperand = null;
-    secondOperand = null;
-    firstOperator = null;
+    clearOperandsAndFirstOperator();
     
     if(selectedButton) {
         selectedButton.style.backgroundColor = "orange";
@@ -261,9 +257,31 @@ function showTime() {
     dateDisplay.textContent = currentTime;
 }
 
-function clearOperands() {
+function clearOperandsAndFirstOperator() {
     firstOperand = null;
     secondOperand = null;
+    firstOperator = null;
+}
+
+function clearOperandsandSecondOperator() {
+    firstOperand = null;
+    secondOperand = null;
+    secondOperator = null;
+}
+
+function clearAll() {
+    firstOperand = null;
+    secondOperand = null;
+    firstOperator = null;
+    secondOperator = null;
+}
+
+function setFirstOperand(num) {
+    firstOperand = num;
+}
+
+function setSecondOperand(num) {
+    secondOperand = num;
 }
 
 showTime();

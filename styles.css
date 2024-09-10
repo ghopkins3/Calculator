@@ -21,7 +21,6 @@ body {
     padding-top: 4vh;
     color: white;
     font-size: 48px;
-    font-family: Inter;
     font-weight: 600;
 }
 
@@ -74,6 +73,7 @@ body {
     height: 90px;
     position: relative;
     font-size: 95px;
+    font-weight: 200;
     line-height: 90px;
     text-align: end;
     background-color: black;

@@ -68,29 +68,33 @@ numBtns.forEach((button) => {
     button.addEventListener("click", (event) => {
         if(event.target.classList.contains("number") || event.target.classList.contains("decimal")) {
             if(inputDisplay.textContent === "0" || selectedButton) {
-                inputDisplay.textContent = event.target.textContent;
-            } else if(inputDisplay.textContent.length === 9) {
+                setDisplayTextContent(event.target.textContent);
+            } else if(displayLengthEqualsNumber(9)) {
                 return;
             } else if(inputDisplay.textContent.includes(".") && event.target.textContent === ".") {
                 return;
             } else {
-                inputDisplay.textContent += event.target.textContent;
+                appendToDisplayTextContent(event.target.textContent);
             }
 
-            if(inputDisplay.textContent.length === 7) {
-                inputDisplay.style.fontSize = "90px";
-            } else if(inputDisplay.textContent.length === 8) {
-                inputDisplay.style.fontSize = "78px";
-            } else if(inputDisplay.textContent.length === 9) {
-                inputDisplay.style.fontSize = "68px";
+            if(displayLengthEqualsNumber(7)) {
+                setDisplayFontSize("78px");
+            } else if(displayLengthEqualsNumber(8)) {
+                setDisplayFontSize("68px");
+            } else if(displayLengthEqualsNumber(9)) {
+                setDisplayFontSize("60px");
             }
+
+
+
+            console.log("length: "  + inputDisplay.textContent.length);
 
             setSecondOperator(firstOperator);
 
             if(selectedButton) {
-                inputDisplay.style.fontSize = "95px";
+                setDisplayFontSize("95px");
                 disableButtonStyle();
-                selectedButton = null;
+                setSelectedButtonNull();
             }
 
         }
@@ -104,12 +108,22 @@ clearBtn.addEventListener("click", () => {
     
     if(selectedButton) {
         disableButtonStyle();
-        selectedButton = null;
+        setSelectedButtonNull();
     }
 });
 
 signBtn.addEventListener("click", () => {
     negateNumber(inputDisplay.textContent);
+
+    if(displayLengthEqualsNumber(7)) {
+        setDisplayFontSize("80px");
+    } else if(displayLengthEqualsNumber(8)) {
+        setDisplayFontSize("70px");
+    } else if(displayLengthEqualsNumber(9)) {
+        setDisplayFontSize("62px");
+    } else if(displayLengthEqualsNumber(10)) {
+        setDisplayFontSize("54px");
+    }
 });
 
 backspaceBtn.addEventListener("click", () => {
@@ -119,10 +133,10 @@ backspaceBtn.addEventListener("click", () => {
         inputDisplay.textContent === "0") {
         return;
     } else if(inputDisplay.textContent === "") {
-        inputDisplay.textContent = "0";
+        setDisplayTextContent("0");
     } 
 
-    inputDisplay.textContent = inputDisplay.textContent.slice(0, -1);
+    setDisplayTextContent(inputDisplay.textContent.slice(0, -1));
 });
 
 function add(x, y) {
@@ -300,6 +314,30 @@ function logInputs() {
     console.log("first operator: " + firstOperator);
     console.log("second operand: "  + secondOperand);
     console.log("second operator: "  + secondOperator)
+}
+
+function displayLengthEqualsNumber(num) {
+    if(inputDisplay.textContent.length === num) {
+        return true;
+    } 
+    
+    return false;
+}   
+
+function setDisplayFontSize(str) {
+    inputDisplay.style.fontSize = str;
+}
+
+function setSelectedButtonNull() {
+    selectedButton = null;
+}
+
+function setDisplayTextContent(str) {
+    inputDisplay.textContent = str;
+}
+
+function appendToDisplayTextContent(str) {
+    inputDisplay.textContent += str;
 }
 
 showTime();

@@ -17,61 +17,52 @@ document.addEventListener("keydown", () => {
     handleKeyPress(event);
 });
 
+// TO DO???
+// implement multiplication thing that iphone calc does when pressing only buttons
+
 operatorBtns.forEach((button) => {
     button.addEventListener("click", (event) => {
         if(event.target.classList.contains("operator")) {
             
-            firstOperator = event.target.textContent;
+            setFirstOperator(event.target.textContent);
             
             if(secondOperator === null) {
-                firstOperand = parseFloat(inputDisplay.textContent);
+                setFirstOperand(parseFloat(inputDisplay.textContent));
             }
 
             if(firstOperand && firstOperator && secondOperator !== null) {
-                secondOperand = parseFloat(inputDisplay.textContent);
-            
+                setSecondOperand(parseFloat(inputDisplay.textContent));
                 operate(firstOperand, secondOperator, secondOperand);
-
                 // Second operator has to be set to null to skip this statement
                 // Otherwise user can keep pressing any operator to perform unintended calculations
 
-                clearOperandsandSecondOperator();
-                firstOperand = parseFloat(result);
+                clearOperandsAndSecondOperator();
+                setFirstOperand(parseFloat(result));
 
             }
 
             if(selectedButton) {
-                selectedButton.style.backgroundColor = "orange";
-                selectedButton.style.color = "white";
+                disableButtonStyle();
             }
 
             selectedButton = event.target;
-            selectedButton.style.backgroundColor = "white";
-            selectedButton.style.color = "orange";
-
-            console.log("first operator: " + firstOperator);
-            console.log("second operator: " + secondOperator);
-
+            enableButtonStyle();
         }
     });
 });
 
 equalsBtn.addEventListener("click", () => {
 
-    console.log("first operator: " + firstOperator);
-    console.log("second operator: " + secondOperator);
-    secondOperand = parseFloat(inputDisplay.textContent);
+    setSecondOperand(parseFloat(inputDisplay.textContent));
     operate(firstOperand, firstOperator, secondOperand);
-    clearAll();
-    firstOperand = parseFloat(result);
+    clearAllOperandsAndOperators();
+    setFirstOperand(parseFloat(result));
     
     if(selectedButton) {
-        selectedButton.style.backgroundColor = "orange";
-        selectedButton.style.color = "white";
+        disableButtonStyle();
     }
     
 });
-
 
 numBtns.forEach((button) => {
     button.addEventListener("click", (event) => {
@@ -94,12 +85,11 @@ numBtns.forEach((button) => {
                 inputDisplay.style.fontSize = "68px";
             }
 
-            secondOperator = firstOperator;
+            setSecondOperator(firstOperator);
 
             if(selectedButton) {
                 inputDisplay.style.fontSize = "95px";
-                selectedButton.style.backgroundColor = "orange";
-                selectedButton.style.color = "white";
+                disableButtonStyle();
                 selectedButton = null;
             }
 
@@ -108,23 +98,18 @@ numBtns.forEach((button) => {
 });
 
 clearBtn.addEventListener("click", () => {
-    inputDisplay.textContent = "0";
-    inputDisplay.style.fontSize = "95px";
-    clearOperandsAndFirstOperator();
+    clearTextContent();
+    resetFontSize();
+    clearAllOperandsAndOperators();
     
     if(selectedButton) {
-        selectedButton.style.backgroundColor = "orange";
-        selectedButton.style.color = "white";
+        disableButtonStyle();
         selectedButton = null;
     }
 });
 
 signBtn.addEventListener("click", () => {
-    let num = inputDisplay.textContent;
-    if(!isNaN(num)) {
-        num = num - (num * 2);
-    }
-    inputDisplay.textContent = num;
+    negateNumber(inputDisplay.textContent);
 });
 
 backspaceBtn.addEventListener("click", () => {
@@ -139,7 +124,6 @@ backspaceBtn.addEventListener("click", () => {
 
     inputDisplay.textContent = inputDisplay.textContent.slice(0, -1);
 });
-
 
 function add(x, y) {
     if(isNaN(y)) {
@@ -170,13 +154,6 @@ function multiply(x, y) {
         return x * x;
     }
     return x * y;
-}
-
-function getInputs() {
-    inputs = inputDisplay.textContent.split(" ");
-    x = parseFloat(inputs[0]);
-    op = inputs[1];
-    y = parseFloat(inputs[2]);
 }
 
 function splitOnDecimal(decimalNumber) {
@@ -263,13 +240,13 @@ function clearOperandsAndFirstOperator() {
     firstOperator = null;
 }
 
-function clearOperandsandSecondOperator() {
+function clearOperandsAndSecondOperator() {
     firstOperand = null;
     secondOperand = null;
     secondOperator = null;
 }
 
-function clearAll() {
+function clearAllOperandsAndOperators() {
     firstOperand = null;
     secondOperand = null;
     firstOperator = null;
@@ -282,6 +259,47 @@ function setFirstOperand(num) {
 
 function setSecondOperand(num) {
     secondOperand = num;
+}
+
+function setFirstOperator(op) {
+    firstOperator = op;
+}
+
+function setSecondOperator(op) {
+    secondOperator = op;
+}
+
+function negateNumber(num) {
+    if(!isNaN(num)) {
+        num = num - (num * 2);
+    }
+
+    inputDisplay.textContent = num;
+}
+
+function enableButtonStyle() {
+    selectedButton.style.backgroundColor = "white";
+    selectedButton.style.color = "orange";
+}
+
+function disableButtonStyle() {
+    selectedButton.style.backgroundColor = "orange";
+    selectedButton.style.color = "white";
+}
+
+function resetFontSize() {
+    inputDisplay.style.fontSize = "95px";
+}
+
+function clearTextContent() {
+    inputDisplay.textContent = "0";
+}
+
+function logInputs() {
+    console.log("first operand: " + firstOperand);
+    console.log("first operator: " + firstOperator);
+    console.log("second operand: "  + secondOperand);
+    console.log("second operator: "  + secondOperator)
 }
 
 showTime();

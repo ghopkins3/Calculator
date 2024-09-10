@@ -2,6 +2,7 @@
     padding: 0;
     margin: 0;
     caret-color: transparent;
+    font-family: Inter;
 }
 
 body {
@@ -20,6 +21,8 @@ body {
     padding-top: 4vh;
     color: white;
     font-size: 48px;
+    font-family: Inter;
+    font-weight: 600;
 }
 
 #shell { 
@@ -165,6 +168,7 @@ button:hover {
 
 #options button {
     background: gray;
+    color: black;
 }
 
 .swipe-bar {

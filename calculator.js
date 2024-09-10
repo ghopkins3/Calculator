@@ -13,12 +13,9 @@ let selectedButton = null;
 let firstOperator = null;
 let secondOperator = null;
 
-document.addEventListener("keydown", () => {
+document.addEventListener("keydown", (event) => {
     handleKeyPress(event);
 });
-
-// TO DO???
-// implement multiplication thing that iphone calc does when pressing only buttons
 
 operatorBtns.forEach((button) => {
     button.addEventListener("click", (event) => {
@@ -39,9 +36,9 @@ operatorBtns.forEach((button) => {
             if(firstOperand && firstOperator && secondOperator !== null) {
                 setSecondOperand(parseFloat(inputDisplay.textContent));
                 operate(firstOperand, secondOperator, secondOperand);
+
                 // Second operator has to be set to null to skip this statement
                 // Otherwise user can keep pressing any operator to perform unintended calculations
-
                 clearOperandsAndSecondOperator();
                 setFirstOperand(parseFloat(result));
 
@@ -195,10 +192,12 @@ function calculatePrecision(x, y) {
 
     if(xSplit[1] !== undefined) {
         xPrecision = xSplit[1].toString().length;
+        console.log(xPrecision);
     } 
 
     if(ySplit[1] !== undefined) {
         yPrecision = ySplit[1].toString().length;
+        console.log(yPrecision);
     } 
 
     return Math.max(xPrecision, yPrecision);
@@ -219,9 +218,9 @@ function operate(x, op, y) {
         result = multiply(x, y);
     }
 
+    console.log(result);
     result = result.toFixed(calculatePrecision(x, y));
-
-    console.log(result.length);
+    console.log(result);
 
     if(resultLengthEqualsNumber(7)) {
         setDisplayFontSize("82px");
@@ -364,6 +363,10 @@ function setDisplayTextContent(str) {
 
 function appendToDisplayTextContent(str) {
     inputDisplay.textContent += str;
+}
+
+function handleKeyPress() {
+
 }
 
 showTime();

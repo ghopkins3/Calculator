@@ -24,6 +24,12 @@ operatorBtns.forEach((button) => {
     button.addEventListener("click", (event) => {
         if(event.target.classList.contains("operator")) {
             
+            if(inputDisplay.textContent === "nice try!" || 
+                inputDisplay.textContent === "Overflow" || 
+                inputDisplay.textContent === "Infinity") {
+                return;
+            }
+
             setFirstOperator(event.target.textContent);
             
             if(secondOperator === null) {
@@ -78,11 +84,11 @@ numBtns.forEach((button) => {
             }
 
             if(displayLengthEqualsNumber(7)) {
-                setDisplayFontSize("78px");
+                setDisplayFontSize("82px");
             } else if(displayLengthEqualsNumber(8)) {
-                setDisplayFontSize("68px");
+                setDisplayFontSize("72px");
             } else if(displayLengthEqualsNumber(9)) {
-                setDisplayFontSize("60px");
+                setDisplayFontSize("65px");
             }
 
 
@@ -113,16 +119,23 @@ clearBtn.addEventListener("click", () => {
 });
 
 signBtn.addEventListener("click", () => {
+
+    if(inputDisplay.textContent === "nice try!" || 
+        inputDisplay.textContent === "Overflow" || 
+        inputDisplay.textContent === "Infinity") {
+        return;
+    }
+
     negateNumber(inputDisplay.textContent);
 
     if(displayLengthEqualsNumber(7)) {
-        setDisplayFontSize("80px");
+        setDisplayFontSize("84px");
     } else if(displayLengthEqualsNumber(8)) {
-        setDisplayFontSize("70px");
+        setDisplayFontSize("74px");
     } else if(displayLengthEqualsNumber(9)) {
-        setDisplayFontSize("62px");
+        setDisplayFontSize("64px");
     } else if(displayLengthEqualsNumber(10)) {
-        setDisplayFontSize("54px");
+        setDisplayFontSize("58px");
     }
 });
 
@@ -192,6 +205,7 @@ function calculatePrecision(x, y) {
 }
 
 function operate(x, op, y) {
+    
     if(op === "+") {
         result = add(x, y);
     } else if(op === "-") {
@@ -199,32 +213,36 @@ function operate(x, op, y) {
     } else if(op === "÷") {
         result = divide(x, y);
         if(result === "nice try!") {
-            inputDisplay.textContent = result;
+            setDisplayTextContent(result);
         }
     } else if(op === "x") {
         result = multiply(x, y);
     }
-    
+
     result = result.toFixed(calculatePrecision(x, y));
 
-    if(result.length === 7) {
-        inputDisplay.style.fontSize = "90px";
-    } else if(result.length === 8) {
-        inputDisplay.style.fontSize = "78px";
-    } else if(result.length === 9) {
-        inputDisplay.style.fontSize = "68px";
+    console.log(result.length);
+
+    if(resultLengthEqualsNumber(7)) {
+        setDisplayFontSize("82px");
+    } else if(resultLengthEqualsNumber(8)) {
+        setDisplayFontSize("72px");
+    } else if(resultLengthEqualsNumber(9)) {
+        setDisplayFontSize("65px");
     }
 
     if(result.length > 9) {
         let sciNotation = parseFloat(result).toExponential(5).replace("+", "")
         sciNotation = parseFloat(sciNotation).toExponential().replace("+", "");
-        inputDisplay.textContent = sciNotation;
-        inputDisplay.style.fontSize = "74px";
+        setDisplayTextContent(sciNotation);
+        setDisplayFontSize("74px");
     } else if(result.length >= 12) {
         inputDisplay.textContent = "Overflow";
     } else {
         inputDisplay.textContent = result;
     }
+
+    console.log(result);
 }
 
 function showTime() {
@@ -323,6 +341,14 @@ function displayLengthEqualsNumber(num) {
     
     return false;
 }   
+
+function resultLengthEqualsNumber(num) {
+    if(result.length === num) {
+        return true;
+    }
+
+    return false;
+}
 
 function setDisplayFontSize(str) {
     inputDisplay.style.fontSize = str;

@@ -18,10 +18,16 @@ body {
 }
 
 #heading {
-    padding-top: 4vh;
+    padding-top: 2vh;
     color: white;
     font-size: 48px;
     font-weight: 600;
+}
+
+#subheading {
+    color: white;
+    padding-top: 5px;
+    font-size: 25px;
 }
 
 #shell { 
@@ -32,7 +38,7 @@ body {
     margin-bottom: 30px;
     width: 400px;
     height: 800px;
-    box-shadow: 0px 0px 1px 8px #262523;
+    box-shadow: 0px 0px 1px 8px #313037;
     border-radius: 50px;
 }
 

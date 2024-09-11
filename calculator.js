@@ -12,6 +12,8 @@ let secondOperand = null;
 let selectedButton = null;
 let firstOperator = null;
 let secondOperator = null;
+var iphoneTypeSound = new Audio("sounds/iphone_typing.wav")
+var iphoneDeleteSound = new Audio("sounds/iphone_delete.wav")
 
 document.addEventListener("keydown", (event) => {
     handleKeyPress(event);
@@ -20,7 +22,7 @@ document.addEventListener("keydown", (event) => {
 operatorBtns.forEach((button) => {
     button.addEventListener("click", (event) => {
         if(event.target.classList.contains("operator")) {
-            
+            iphoneTypeSound.play();
             if(inputDisplay.textContent === "nice try!" || 
                 inputDisplay.textContent === "Overflow" || 
                 inputDisplay.textContent === "Infinity") {
@@ -55,7 +57,7 @@ operatorBtns.forEach((button) => {
 });
 
 equalsBtn.addEventListener("click", () => {
-
+    iphoneTypeSound.play();
     setSecondOperand(parseFloat(inputDisplay.textContent));
     operate(firstOperand, firstOperator, secondOperand);
     clearAllOperandsAndOperators();
@@ -70,9 +72,10 @@ equalsBtn.addEventListener("click", () => {
 numBtns.forEach((button) => {
     button.addEventListener("click", (event) => {
         if(event.target.classList.contains("number") || event.target.classList.contains("decimal")) {
+            iphoneTypeSound.play();
             if(inputDisplay.textContent === "0" || selectedButton) {
                 setDisplayTextContent(event.target.textContent);
-            } else if(displayLengthEqualsNumber(9)) {
+            } else if(displayLengthGreaterThanOrEqualsNumber(9)) {
                 return;
             } else if(inputDisplay.textContent.includes(".") && event.target.textContent === ".") {
                 return;
@@ -105,6 +108,7 @@ numBtns.forEach((button) => {
 });
 
 clearBtn.addEventListener("click", () => {
+    iphoneDeleteSound.play();
     clearTextContent();
     resetFontSize();
     clearAllOperandsAndOperators();
@@ -116,7 +120,7 @@ clearBtn.addEventListener("click", () => {
 });
 
 signBtn.addEventListener("click", () => {
-
+    iphoneTypeSound.play();
     if(inputDisplay.textContent === "nice try!" || 
         inputDisplay.textContent === "Overflow" || 
         inputDisplay.textContent === "Infinity") {
@@ -137,6 +141,7 @@ signBtn.addEventListener("click", () => {
 });
 
 backspaceBtn.addEventListener("click", () => {
+    iphoneDeleteSound.play();
     if(inputDisplay.textContent === "nice try!" || 
         inputDisplay.textContent === "Overflow" || 
         inputDisplay.textContent === "Infinity" ||
@@ -180,27 +185,15 @@ function multiply(x, y) {
     return x * y;
 }
 
-function splitOnDecimal(decimalNumber) {
-    return decimalNumber.toString().split(".");
+function splitOnDecimal(num) {
+    return num.toString().split(".");
 }
 
-function calculatePrecision(x, y) {
-    let xPrecision = 0;
-    let yPrecision = 0;
-    let xSplit = splitOnDecimal(x);
-    let ySplit = splitOnDecimal(y);
-
-    if(xSplit[1] !== undefined) {
-        xPrecision = xSplit[1].toString().length;
-        console.log(xPrecision);
-    } 
-
-    if(ySplit[1] !== undefined) {
-        yPrecision = ySplit[1].toString().length;
-        console.log(yPrecision);
-    } 
-
-    return Math.max(xPrecision, yPrecision);
+function roundToMaxDigits(num) {
+    let split = splitOnDecimal(num);
+    let wholeNumber = split[0];
+    
+    return parseFloat(num.toFixed(9 - wholeNumber.length));
 }
 
 function operate(x, op, y) {
@@ -218,30 +211,28 @@ function operate(x, op, y) {
         result = multiply(x, y);
     }
 
-    console.log(result);
-    result = result.toFixed(calculatePrecision(x, y));
-    console.log(result);
-
-    if(resultLengthEqualsNumber(7)) {
-        setDisplayFontSize("82px");
-    } else if(resultLengthEqualsNumber(8)) {
-        setDisplayFontSize("72px");
-    } else if(resultLengthEqualsNumber(9)) {
-        setDisplayFontSize("65px");
-    }
-
-    if(result.length > 9) {
-        let sciNotation = parseFloat(result).toExponential(5).replace("+", "")
-        sciNotation = parseFloat(sciNotation).toExponential().replace("+", "");
-        setDisplayTextContent(sciNotation);
-        setDisplayFontSize("74px");
-    } else if(result.length >= 12) {
-        inputDisplay.textContent = "Overflow";
+    if(result.toString().length > 9) {
+        if(result < 100_000_000) {
+            setDisplayTextContent(roundToMaxDigits(result));
+        } else {
+            let sciNotation = parseFloat(result).toExponential(5).replace("+", "")
+            sciNotation = parseFloat(sciNotation).toExponential().replace("+", "");
+            setDisplayTextContent(sciNotation);
+        }
     } else {
-        inputDisplay.textContent = result;
+        setDisplayTextContent(result);
     }
 
-    console.log(result);
+    if(displayLengthEqualsNumber(7)) {
+        setDisplayFontSize("82px");
+    } else if(displayLengthEqualsNumber(8)) {
+        setDisplayFontSize("72px");
+    } else if(displayLengthEqualsNumber(9)) {
+        setDisplayFontSize("65px");
+    } else if(displayLengthEqualsNumber(10)) {
+        setDisplayFontSize("63px");
+    }
+
 }
 
 function showTime() {
@@ -326,13 +317,6 @@ function clearTextContent() {
     inputDisplay.textContent = "0";
 }
 
-function logInputs() {
-    console.log("first operand: " + firstOperand);
-    console.log("first operator: " + firstOperator);
-    console.log("second operand: "  + secondOperand);
-    console.log("second operator: "  + secondOperator)
-}
-
 function displayLengthEqualsNumber(num) {
     if(inputDisplay.textContent.length === num) {
         return true;
@@ -341,8 +325,8 @@ function displayLengthEqualsNumber(num) {
     return false;
 }   
 
-function resultLengthEqualsNumber(num) {
-    if(result.length === num) {
+function displayLengthGreaterThanOrEqualsNumber(num) {
+    if(inputDisplay.textContent.length >= num) {
         return true;
     }
 

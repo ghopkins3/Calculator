@@ -9,6 +9,7 @@ const equalsBtn = document.querySelector("#equals");
 const numpad = document.querySelector(".inputs");
 let firstOperand = null;
 let secondOperand = null;
+let thirdOperand = null;
 let selectedButton = null;
 let firstOperator = null;
 let secondOperator = null;
@@ -41,14 +42,30 @@ operatorBtns.forEach((button) => {
                 setFirstOperand(parseFloat(inputDisplay.textContent.replace(/,/g, "")));
             }
 
+
+            // 9 - 5 x 6 = 9 - 30 = -21
+            // currently 9 - 5 x 6 = 4 x 6 = 24
+
+            // if first operator === x 
+            // operate(5, x, 6)
+            // operate(9 - result)
             if(firstOperand && firstOperator && secondOperator !== null) {
                 setSecondOperand(parseFloat(inputDisplay.textContent.replace(/,/g, "")));
-                operate(firstOperand, secondOperator, secondOperand);
-
-                // Second operator has to be set to null to skip this statement
-                // Otherwise user can keep pressing any operator to perform unintended calculations
-                clearOperandsAndSecondOperator();
-                setFirstOperand(parseFloat(result));
+                console.log("first oper: " + firstOperand);
+                console.log("first operator: " + firstOperator);
+                console.log("second oper: " + secondOperand);
+                console.log("second operator: " + secondOperator);
+                if(firstOperator === "x") {
+                    let thirdOperand = parseFloat(inputDisplay.textContent.replace(/,/g, ""));
+                    console.log("third op: " + thirdOperand);
+                } else {
+                    console.log("HERE");
+                    operate(firstOperand, secondOperator, secondOperand);
+                    // Second operator has to be set to null to skip this statement
+                    // Otherwise user can keep pressing any operator to perform unintended calculations
+                    clearOperandsAndSecondOperator();
+                    setFirstOperand(parseFloat(result));
+                }
 
             }
 
@@ -64,10 +81,18 @@ operatorBtns.forEach((button) => {
 
 equalsBtn.addEventListener("click", () => {
     iphoneTypeSound.play();
-    setSecondOperand(parseFloat(inputDisplay.textContent.replace(/,/g, "")));
-    operate(firstOperand, firstOperator, secondOperand);
-    clearAllOperandsAndOperators();
-    setFirstOperand(parseFloat(result));
+
+    if(thirdOperand === null) {
+        setSecondOperand(parseFloat(inputDisplay.textContent.replace(/,/g, "")));
+        console.log("first oper: " + firstOperand);
+        console.log("first operator: " + firstOperator);
+        console.log("second oper: " + secondOperand);
+        console.log("second operator: " + secondOperator);
+        console.log("EREHRLH");
+        operate(firstOperand, firstOperator, secondOperand);
+        clearAllOperandsAndOperators();
+        setFirstOperand(parseFloat(result));
+    }
     
     if(selectedButton) {
         disableButtonStyle();

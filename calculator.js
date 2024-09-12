@@ -15,6 +15,12 @@ let secondOperator = null;
 var iphoneTypeSound = new Audio("sounds/iphone_typing.wav")
 var iphoneDeleteSound = new Audio("sounds/iphone_delete.wav")
 
+var formatter = new Intl.NumberFormat("en-US", { 
+    style: "decimal",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 8,
+});
+
 document.addEventListener("keydown", (event) => {
     handleKeyPress(event);
 });
@@ -32,11 +38,11 @@ operatorBtns.forEach((button) => {
             setFirstOperator(event.target.textContent);
             
             if(secondOperator === null) {
-                setFirstOperand(parseFloat(inputDisplay.textContent));
+                setFirstOperand(parseFloat(inputDisplay.textContent.replace(/,/g, "")));
             }
 
             if(firstOperand && firstOperator && secondOperator !== null) {
-                setSecondOperand(parseFloat(inputDisplay.textContent));
+                setSecondOperand(parseFloat(inputDisplay.textContent.replace(/,/g, "")));
                 operate(firstOperand, secondOperator, secondOperand);
 
                 // Second operator has to be set to null to skip this statement
@@ -58,7 +64,7 @@ operatorBtns.forEach((button) => {
 
 equalsBtn.addEventListener("click", () => {
     iphoneTypeSound.play();
-    setSecondOperand(parseFloat(inputDisplay.textContent));
+    setSecondOperand(parseFloat(inputDisplay.textContent.replace(/,/g, "")));
     operate(firstOperand, firstOperator, secondOperand);
     clearAllOperandsAndOperators();
     setFirstOperand(parseFloat(result));
@@ -75,7 +81,7 @@ numBtns.forEach((button) => {
             iphoneTypeSound.play();
             if(inputDisplay.textContent === "0" || selectedButton) {
                 setDisplayTextContent(event.target.textContent);
-            } else if(displayLengthGreaterThanOrEqualsNumber(9)) {
+            } else if(displayLengthGreaterThanOrEqualsNumber(11)) {
                 return;
             } else if(inputDisplay.textContent.includes(".") && event.target.textContent === ".") {
                 return;
@@ -91,8 +97,6 @@ numBtns.forEach((button) => {
                 setDisplayFontSize("65px");
             }
 
-
-
             console.log("length: "  + inputDisplay.textContent.length);
 
             setSecondOperator(firstOperator);
@@ -103,6 +107,7 @@ numBtns.forEach((button) => {
                 setSelectedButtonNull();
             }
 
+                        
         }
     });
 });
@@ -147,11 +152,11 @@ backspaceBtn.addEventListener("click", () => {
         inputDisplay.textContent === "Infinity" ||
         inputDisplay.textContent === "0") {
         return;
-    } else if(inputDisplay.textContent === "") {
-        setDisplayTextContent("0");
-    } 
-
-    setDisplayTextContent(inputDisplay.textContent.slice(0, -1));
+    } else if(inputDisplay.textContent.length === 1) {
+        clearTextContent();
+    } else {
+        setDisplayTextContent(inputDisplay.textContent.slice(0, -1));
+    }
 });
 
 function add(x, y) {
@@ -342,12 +347,29 @@ function setSelectedButtonNull() {
 }
 
 function setDisplayTextContent(str) {
-    inputDisplay.textContent = str;
+    let num = parseFloat(String(str).replace(/,/g, '')); // Convert to string and remove commas
+    if (!isNaN(num)) {
+        inputDisplay.textContent = formatter.format(num);
+    } else {
+        inputDisplay.textContent = str; // If not a number, just set the string directly
+    }
 }
 
+
 function appendToDisplayTextContent(str) {
-    inputDisplay.textContent += str;
+    let currentText = String(inputDisplay.textContent).replace(/,/g, ''); // Convert to string and remove commas
+
+    
+
+    let newText = currentText + String(str); // Concatenate as string
+    let num = parseFloat(newText);
+
+    if (!isNaN(num) || newText.includes(".")) {
+        inputDisplay.textContent = newText.includes(".") ? newText : formatter.format(num);
+    }
 }
+
+
 
 function handleKeyPress() {
 

@@ -89,14 +89,6 @@ numBtns.forEach((button) => {
                 appendToDisplayTextContent(event.target.textContent);
             }
 
-            if(displayLengthEqualsNumber(7)) {
-                setDisplayFontSize("82px");
-            } else if(displayLengthEqualsNumber(8)) {
-                setDisplayFontSize("72px");
-            } else if(displayLengthEqualsNumber(9)) {
-                setDisplayFontSize("65px");
-            }
-
             console.log("length: "  + inputDisplay.textContent.length);
 
             setSecondOperator(firstOperator);
@@ -216,27 +208,7 @@ function operate(x, op, y) {
         result = multiply(x, y);
     }
 
-    if(result.toString().length > 9) {
-        if(result < 100_000_000) {
-            setDisplayTextContent(roundToMaxDigits(result));
-        } else {
-            let sciNotation = parseFloat(result).toExponential(5).replace("+", "")
-            sciNotation = parseFloat(sciNotation).toExponential().replace("+", "");
-            setDisplayTextContent(sciNotation);
-        }
-    } else {
-        setDisplayTextContent(result);
-    }
-
-    if(displayLengthEqualsNumber(7)) {
-        setDisplayFontSize("82px");
-    } else if(displayLengthEqualsNumber(8)) {
-        setDisplayFontSize("72px");
-    } else if(displayLengthEqualsNumber(9)) {
-        setDisplayFontSize("65px");
-    } else if(displayLengthEqualsNumber(10)) {
-        setDisplayFontSize("63px");
-    }
+    setDisplayTextContent(result);
 
 }
 
@@ -357,19 +329,36 @@ function setDisplayTextContent(str) {
 
 
 function appendToDisplayTextContent(str) {
-    let currentText = String(inputDisplay.textContent).replace(/,/g, ''); // Convert to string and remove commas
-
-    
-
-    let newText = currentText + String(str); // Concatenate as string
+    let currentText = String(inputDisplay.textContent).replace(/,/g, ''); // Remove commas
+    let newText = currentText + String(str); // Concatenate the new input
     let num = parseFloat(newText);
 
-    if (!isNaN(num) || newText.includes(".")) {
-        inputDisplay.textContent = newText.includes(".") ? newText : formatter.format(num);
+    if (!isNaN(num)) {
+        if (newText.includes(".")) {
+            // Split the number at the decimal point
+            let parts = newText.split(".");
+            let integerPart = parts[0];
+            let decimalPart;
+
+            if (parts.length > 1) {
+                // If there are digits after the decimal point, include them
+                decimalPart = "." + parts[1];
+            } else {
+                // If there are no digits after the decimal point, just keep the decimal
+                decimalPart = ".";
+            }
+
+            // Format the integer part and reattach the decimal part
+            inputDisplay.textContent = formatter.format(parseFloat(integerPart)) + decimalPart;
+        } else {
+            // If no decimal, simply format the number
+            inputDisplay.textContent = formatter.format(num);
+        }
+    } else {
+        // If the input is not a valid number, display the new text as-is
+        inputDisplay.textContent = newText;
     }
 }
-
-
 
 function handleKeyPress() {
 

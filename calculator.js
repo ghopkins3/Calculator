@@ -13,6 +13,8 @@ let thirdOperand = null;
 let selectedButton = null;
 let firstOperator = null;
 let secondOperator = null;
+let thirdOperator = null;
+let buttonCount = 0;
 var iphoneTypeSound = new Audio("sounds/iphone_typing.wav")
 var iphoneDeleteSound = new Audio("sounds/iphone_delete.wav")
 
@@ -42,31 +44,103 @@ operatorBtns.forEach((button) => {
                 setFirstOperand(parseFloat(inputDisplay.textContent.replace(/,/g, "")));
             }
 
-
             // 9 - 5 x 6 = 9 - 30 = -21
             // currently 9 - 5 x 6 = 4 x 6 = 24
 
-            // if first operator === x 
+            // if first operator === x || / and second operator === + || - 
             // operate(5, x, 6)
             // operate(9 - result)
-            if(firstOperand && firstOperator && secondOperator !== null) {
-                setSecondOperand(parseFloat(inputDisplay.textContent.replace(/,/g, "")));
-                console.log("first oper: " + firstOperand);
-                console.log("first operator: " + firstOperator);
-                console.log("second oper: " + secondOperand);
-                console.log("second operator: " + secondOperator);
-                if(firstOperator === "x") {
-                    let thirdOperand = parseFloat(inputDisplay.textContent.replace(/,/g, ""));
-                    console.log("third op: " + thirdOperand);
-                } else {
-                    console.log("HERE");
+
+            // else if first operator === x || / and second operator === x || / 
+            // operate(5 x 6)
+            // 
+
+
+            // working so far: 
+            // 9 - 5 * 6 = -21
+            // 9 - 5 * 6 + 3 * 3 = -12 
+
+            // not working: 
+            // 9 - 5 * 6 * 3 * ... = -81
+            // --> should display the second number in equation until equals or other
+            if(firstOperator !== null && secondOperator !== null) {
+                console.log("operators: " + firstOperator + ", " + secondOperator + ", " + thirdOperator);
+
+                if(firstOperator !== "x" && firstOperator !== "÷") {
+        
+                    console.log("first op !== x && first op !== /");
+                    setSecondOperand(parseFloat(inputDisplay.textContent.replace(/,/g, "")));
+                    console.log("a " + firstOperand);
+                    console.log("b " + secondOperator);
+                    console.log("c " + secondOperand);
                     operate(firstOperand, secondOperator, secondOperand);
-                    // Second operator has to be set to null to skip this statement
-                    // Otherwise user can keep pressing any operator to perform unintended calculations
-                    clearOperandsAndSecondOperator();
                     setFirstOperand(parseFloat(result));
+                    console.log("d " + thirdOperand);
+                    console.log("e " + thirdOperator);
+                    console.log("f " + firstOperand);
+                    operate(thirdOperand, thirdOperator, firstOperand);
+                    clearOperandsAndSecondOperator();
+                    thirdOperator = null;
+                    thirdOperand = null;
+                    console.log("second operator: "  + secondOperator);
+                    setFirstOperand(parseFloat(result));
+
+                    
+                   
                 }
 
+                // working so far: 
+                // 9 - 5 * 6 = -21
+                // 9 - 5 * 6 + 3 * 3 = -12 
+
+                // not working: 
+                // 9 - 5 * 6 * 3 * ... = -81
+                // --> should display the second number in equation until equals or other
+
+                
+                if((firstOperator === "x" || firstOperator === "÷") && thirdOperator === null) {
+                    console.log("first op === x || first op === /");
+
+                    thirdOperand = firstOperand;
+                    thirdOperator = secondOperator;
+
+                    firstOperand = parseFloat(inputDisplay.textContent.replace(/,/g, ""));
+    
+
+                }
+
+                if((firstOperator === "x" || firstOperator === "÷") && (secondOperator === "x" || secondOperator === "÷")) {
+                    console.log("HERHE");
+                    buttonCount++;
+                    
+                    secondOperand = parseFloat(inputDisplay.textContent.replace(/,/g, ""));
+                    console.log("a " + firstOperand);
+                    console.log("b " + firstOperator);
+                    console.log("c " + secondOperand);
+                    console.log("d " + secondOperator);
+                    console.log("e " + thirdOperand);
+                    console.log("f " + thirdOperator);
+        
+                    operate(firstOperand, firstOperator, secondOperand);
+                    inputDisplay.textContent = result;
+                }
+                
+                
+                // operate(firstOperand, secondOperator, secondOperand);
+                    // Second operator has to be set to null to skip this statement
+                    // Otherwise user can keep pressing any operator to perform unintended calculations
+                // clearOperandsAndSecondOperator();
+                // setFirstOperand(parseFloat(result));
+                
+                // if(firstOperator === "x") {
+                    // let thirdOperand = parseFloat(inputDisplay.textContent.replace(/,/g, ""));
+                    // console.log("third op: " + thirdOperand);
+                    // operate(secondOp, firstOperator, thirdOp) 
+                    // operate(firstOp, secondOperator, result)
+
+
+            } else {
+                console.log("NAY");
             }
 
             if(selectedButton) {
@@ -81,18 +155,6 @@ operatorBtns.forEach((button) => {
 
 equalsBtn.addEventListener("click", () => {
     iphoneTypeSound.play();
-
-    if(thirdOperand === null) {
-        setSecondOperand(parseFloat(inputDisplay.textContent.replace(/,/g, "")));
-        console.log("first oper: " + firstOperand);
-        console.log("first operator: " + firstOperator);
-        console.log("second oper: " + secondOperand);
-        console.log("second operator: " + secondOperator);
-        console.log("EREHRLH");
-        operate(firstOperand, firstOperator, secondOperand);
-        clearAllOperandsAndOperators();
-        setFirstOperand(parseFloat(result));
-    }
     
     if(selectedButton) {
         disableButtonStyle();
@@ -113,8 +175,6 @@ numBtns.forEach((button) => {
             } else {
                 appendToDisplayTextContent(event.target.textContent);
             }
-
-            console.log("length: "  + inputDisplay.textContent.length);
 
             setSecondOperator(firstOperator);
 

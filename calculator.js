@@ -15,6 +15,12 @@ let secondOperator = null;
 var iphoneTypeSound = new Audio("sounds/iphone_typing.wav")
 var iphoneDeleteSound = new Audio("sounds/iphone_delete.wav")
 
+var formatter = new Intl.NumberFormat("en-US", { 
+    style: "decimal",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 8,
+});
+
 document.addEventListener("keydown", (event) => {
     handleKeyPress(event);
 });
@@ -75,7 +81,7 @@ numBtns.forEach((button) => {
             iphoneTypeSound.play();
             if(inputDisplay.textContent === "0" || selectedButton) {
                 setDisplayTextContent(event.target.textContent);
-            } else if(displayLengthGreaterThanOrEqualsNumber(9)) {
+            } else if(displayLengthGreaterThanOrEqualsNumber(11)) {
                 return;
             } else if(inputDisplay.textContent.includes(".") && event.target.textContent === ".") {
                 return;
@@ -83,26 +89,13 @@ numBtns.forEach((button) => {
                 appendToDisplayTextContent(event.target.textContent);
             }
 
-            if(displayLengthEqualsNumber(7)) {
-                setDisplayFontSize("82px");
-            } else if(displayLengthEqualsNumber(8)) {
-                setDisplayFontSize("72px");
-            } else if(displayLengthEqualsNumber(9)) {
-                setDisplayFontSize("65px");
-            }
-
-
-
-            console.log("length: "  + inputDisplay.textContent.length);
-
             setSecondOperator(firstOperator);
 
             if(selectedButton) {
                 setDisplayFontSize("95px");
                 disableButtonStyle();
                 setSelectedButtonNull();
-            }
-
+            }                        
         }
     });
 });
@@ -147,11 +140,11 @@ backspaceBtn.addEventListener("click", () => {
         inputDisplay.textContent === "Infinity" ||
         inputDisplay.textContent === "0") {
         return;
-    } else if(inputDisplay.textContent === "") {
-        setDisplayTextContent("0");
-    } 
-
-    setDisplayTextContent(inputDisplay.textContent.slice(0, -1));
+    } else if(inputDisplay.textContent.length === 1) {
+        clearTextContent();
+    } else {
+        setDisplayTextContent(inputDisplay.textContent.slice(0, -1));
+    }
 });
 
 function add(x, y) {
@@ -211,27 +204,7 @@ function operate(x, op, y) {
         result = multiply(x, y);
     }
 
-    if(result.toString().length > 9) {
-        if(result < 100_000_000) {
-            setDisplayTextContent(roundToMaxDigits(result));
-        } else {
-            let sciNotation = parseFloat(result).toExponential(5).replace("+", "")
-            sciNotation = parseFloat(sciNotation).toExponential().replace("+", "");
-            setDisplayTextContent(sciNotation);
-        }
-    } else {
-        setDisplayTextContent(result);
-    }
-
-    if(displayLengthEqualsNumber(7)) {
-        setDisplayFontSize("82px");
-    } else if(displayLengthEqualsNumber(8)) {
-        setDisplayFontSize("72px");
-    } else if(displayLengthEqualsNumber(9)) {
-        setDisplayFontSize("65px");
-    } else if(displayLengthEqualsNumber(10)) {
-        setDisplayFontSize("63px");
-    }
+    setDisplayTextContent(result);
 
 }
 
@@ -342,11 +315,45 @@ function setSelectedButtonNull() {
 }
 
 function setDisplayTextContent(str) {
-    inputDisplay.textContent = str;
+    let num = parseFloat(String(str).replace(/,/g, '')); // Convert to string and remove commas
+    if (!isNaN(num)) {
+        inputDisplay.textContent = formatter.format(num);
+    } else {
+        inputDisplay.textContent = str; // If not a number, just set the string directly
+    }
 }
 
+
 function appendToDisplayTextContent(str) {
-    inputDisplay.textContent += str;
+    let currentText = String(inputDisplay.textContent).replace(/,/g, ''); // Remove commas
+    let newText = currentText + String(str); // Concatenate the new input
+    let num = parseFloat(newText);
+
+    if (!isNaN(num)) {
+        if (newText.includes(".")) {
+            // Split the number at the decimal point
+            let parts = newText.split(".");
+            let integerPart = parts[0];
+            let decimalPart;
+
+            if (parts.length > 1) {
+                // If there are digits after the decimal point, include them
+                decimalPart = "." + parts[1];
+            } else {
+                // If there are no digits after the decimal point, just keep the decimal
+                decimalPart = ".";
+            }
+
+            // Format the integer part and reattach the decimal part
+            inputDisplay.textContent = formatter.format(parseFloat(integerPart)) + decimalPart;
+        } else {
+            // If no decimal, simply format the number
+            inputDisplay.textContent = formatter.format(num);
+        }
+    } else {
+        // If the input is not a valid number, display the new text as-is
+        inputDisplay.textContent = newText;
+    }
 }
 
 function handleKeyPress() {

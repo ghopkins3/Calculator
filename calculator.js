@@ -44,11 +44,6 @@ operatorBtns.forEach((button) => {
             if(firstOperand && firstOperator && secondOperator !== null) {
                 setSecondOperand(parseFloat(inputDisplay.textContent.replace(/,/g, "")));
                 operate(firstOperand, secondOperator, secondOperand);
-                console.log(firstOperand);
-                console.log(secondOperator);
-                console.log(secondOperand);
-
-                console.log(firstOperator);
 
                 // Second operator has to be set to null to skip this statement
                 // Otherwise user can keep pressing any operator to perform unintended calculations
@@ -71,9 +66,6 @@ equalsBtn.addEventListener("click", () => {
     iphoneTypeSound.play();
     setSecondOperand(parseFloat(inputDisplay.textContent.replace(/,/g, "")));
     operate(firstOperand, firstOperator, secondOperand);
-    console.log(firstOperand);
-    console.log(firstOperator);
-    console.log(secondOperand);
     clearAllOperandsAndOperators();
     setFirstOperand(parseFloat(result));
     
@@ -101,6 +93,11 @@ numBtns.forEach((button) => {
                 } else {
                     appendToDisplayTextContent(event.target.textContent);
                 }
+            } else if(inputDisplay.textContent === "nice try!" || inputDisplay.textContent === "Infinity" 
+                    || inputDisplay.textContent === "Overflow") {
+                return;
+            } else if(parseFloat(inputDisplay.textContent) > 999_999_999) {
+                return;
             } else {
                 appendToDisplayTextContent(event.target.textContent);
             }
@@ -123,17 +120,15 @@ numBtns.forEach((button) => {
                 }
             } else if(inputDisplay.textContent.includes(".")) {
                 if(displayLengthEqualsNumber(8)) {
-                    setDisplayFontSize("82px");
+                    setDisplayFontSize("78px");
                 } else if(displayLengthEqualsNumber(9)) {
                     setDisplayFontSize("72px");
                 } else if(displayLengthEqualsNumber(10)) {
-                    setDisplayFontSize("66px");
-                } else if(displayLengthEqualsNumber(11)) {
                     setDisplayFontSize("62px");
+                } else if(displayLengthEqualsNumber(11)) {
+                    setDisplayFontSize("60px");
                 }
             }
-
-            console.log(inputDisplay.textContent.replace(/,/g, "").length);
         }
     });
 });
@@ -222,15 +217,7 @@ function operate(x, op, y) {
     } else {
         result = parseFloat(inputDisplay.textContent.replace(/,/g, ""));
     }
-
-    console.log(parseFloat(result));
-    console.log("length: " + result.toString().length);
-
-    if(result.toString().length > 9) {
-        console.log("LONGER THAN 9");
-    }
     setDisplayTextContent(result);
-
 }
 
 function showTime() {
@@ -365,20 +352,30 @@ function setSelectedButtonNull() {
     selectedButton = null;
 }
 
+function clickNonOperator(str) {
+    document.getElementById(str).click();
+}
+
+function clickOperator(str) {
+    firstOperator = document.getElementById(str).textContent;
+    document.getElementById(str).click();
+}
+
 function setDisplayTextContent(str) {
-    let num = parseFloat(String(str).replace(/,/g, '')); // Convert to string and remove commas
+    let num = parseFloat(String(str).replace(/,/g, '')); 
+    console.log(num.toString().length);
     if (!isNaN(num)) {
-        console.log("num: " + num);
-        console.log("num length: " + num.toString().length);
         if(num > 999_999_999 || num < -999_999_999) {
             let expo = parseFloat(num).toExponential(5).replace("+", "");
             expo = parseFloat(expo).toExponential().replace("+", "");
             inputDisplay.textContent = expo;
+        } else if(num.toString().length > 9) {
+            inputDisplay.textContent = parseFloat(num).toExponential(3).replace("+", "");
         } else {
             inputDisplay.textContent = formatter.format(num);
         }
     } else {
-        inputDisplay.textContent = str; // If not a number, just set the string directly
+        inputDisplay.textContent = str; 
     }
 
     if(!inputDisplay.textContent.includes(".")) {
@@ -400,44 +397,55 @@ function setDisplayTextContent(str) {
             setDisplayFontSize("62px");
         }
     }
-
 }
 
-
 function appendToDisplayTextContent(str) {
-    let currentText = String(inputDisplay.textContent).replace(/,/g, ''); // Remove commas
-    let newText = currentText + String(str); // Concatenate the new input
+    let currentText = String(inputDisplay.textContent).replace(/,/g, ''); 
+    let newText = currentText + String(str);
     let num = parseFloat(newText);
 
     if (!isNaN(num)) {
         if (newText.includes(".")) {
-            // Split the number at the decimal point
             let parts = newText.split(".");
             let integerPart = parts[0];
             let decimalPart;
 
             if (parts.length > 1) {
-                // If there are digits after the decimal point, include them
                 decimalPart = "." + parts[1];
             } else {
-                // If there are no digits after the decimal point, just keep the decimal
                 decimalPart = ".";
             }
 
-            // Format the integer part and reattach the decimal part
             inputDisplay.textContent = formatter.format(parseFloat(integerPart)) + decimalPart;
         } else {
-            // If no decimal, simply format the number
             inputDisplay.textContent = formatter.format(num);
         }
     } else {
-        // If the input is not a valid number, display the new text as-is
         inputDisplay.textContent = newText;
     }
 }
 
-function handleKeyPress() {
-
+function handleKeyPress(event) {
+    if((event.key >= 0 && event.key <= 9 || event.key === ".")) {
+        let test = event.key;
+        clickNonOperator(test);
+    } else if(event.key === "+") {
+        clickOperator("add");
+    } else if(event.key === "-") {
+        clickOperator("subtract");
+    } else if(event.key === "*") {
+        clickOperator("multiply");
+    } else if(event.key === "/") {
+        clickOperator("divide");
+    } else if(event.key === "Enter") {
+        clickNonOperator("equals");
+    } else if(event.key === "Escape") {
+        clickNonOperator("clear");
+    } else if(event.key === "Backspace") {
+        clickNonOperator("backspace");
+    } else if(event.key === "n") {
+        negateNumber(inputDisplay.textContent);
+    }
 }
 
 showTime();

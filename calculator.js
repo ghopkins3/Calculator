@@ -38,12 +38,17 @@ operatorBtns.forEach((button) => {
             setFirstOperator(event.target.textContent);
             
             if(secondOperator === null) {
-                setFirstOperand(parseFloat(inputDisplay.textContent));
+                setFirstOperand(parseFloat(inputDisplay.textContent.replace(/,/g, "")));
             }
 
             if(firstOperand && firstOperator && secondOperator !== null) {
-                setSecondOperand(parseFloat(inputDisplay.textContent));
+                setSecondOperand(parseFloat(inputDisplay.textContent.replace(/,/g, "")));
                 operate(firstOperand, secondOperator, secondOperand);
+                console.log(firstOperand);
+                console.log(secondOperator);
+                console.log(secondOperand);
+
+                console.log(firstOperator);
 
                 // Second operator has to be set to null to skip this statement
                 // Otherwise user can keep pressing any operator to perform unintended calculations
@@ -64,8 +69,11 @@ operatorBtns.forEach((button) => {
 
 equalsBtn.addEventListener("click", () => {
     iphoneTypeSound.play();
-    setSecondOperand(parseFloat(inputDisplay.textContent));
+    setSecondOperand(parseFloat(inputDisplay.textContent.replace(/,/g, "")));
     operate(firstOperand, firstOperator, secondOperand);
+    console.log(firstOperand);
+    console.log(firstOperator);
+    console.log(secondOperand);
     clearAllOperandsAndOperators();
     setFirstOperand(parseFloat(result));
     
@@ -81,10 +89,18 @@ numBtns.forEach((button) => {
             iphoneTypeSound.play();
             if(inputDisplay.textContent === "0" || selectedButton) {
                 setDisplayTextContent(event.target.textContent);
-            } else if(displayLengthGreaterThanOrEqualsNumber(11)) {
+            } else if(!inputDisplay.textContent.includes(".") && displayLengthGreaterThanOrEqualsNumber(9)) {
                 return;
-            } else if(inputDisplay.textContent.includes(".") && event.target.textContent === ".") {
-                return;
+            } else if(inputDisplay.textContent.includes(".")) {
+                if(inputDisplay.textContent.includes("-") && displayLengthGreaterThanOrEqualsNumber(11)) {
+                    return;
+                } else if(!inputDisplay.textContent.includes("-") && displayLengthGreaterThanOrEqualsNumber(10)) {
+                    return;
+                } else if(event.target.textContent === ".") {
+                    return;
+                } else {
+                    appendToDisplayTextContent(event.target.textContent);
+                }
             } else {
                 appendToDisplayTextContent(event.target.textContent);
             }
@@ -95,7 +111,29 @@ numBtns.forEach((button) => {
                 setDisplayFontSize("95px");
                 disableButtonStyle();
                 setSelectedButtonNull();
-            }                        
+            }
+            
+            if(!inputDisplay.textContent.includes(".")) {
+                if(displayLengthEqualsNumber(7)) {
+                    setDisplayFontSize("78px");
+                } else if(displayLengthEqualsNumber(8)) {
+                    setDisplayFontSize("69px");
+                } else if(displayLengthEqualsNumber(9)) {
+                    setDisplayFontSize("62px");
+                }
+            } else if(inputDisplay.textContent.includes(".")) {
+                if(displayLengthEqualsNumber(8)) {
+                    setDisplayFontSize("82px");
+                } else if(displayLengthEqualsNumber(9)) {
+                    setDisplayFontSize("72px");
+                } else if(displayLengthEqualsNumber(10)) {
+                    setDisplayFontSize("66px");
+                } else if(displayLengthEqualsNumber(11)) {
+                    setDisplayFontSize("62px");
+                }
+            }
+
+            console.log(inputDisplay.textContent.replace(/,/g, "").length);
         }
     });
 });
@@ -121,16 +159,6 @@ signBtn.addEventListener("click", () => {
     }
 
     negateNumber(inputDisplay.textContent);
-
-    if(displayLengthEqualsNumber(7)) {
-        setDisplayFontSize("84px");
-    } else if(displayLengthEqualsNumber(8)) {
-        setDisplayFontSize("74px");
-    } else if(displayLengthEqualsNumber(9)) {
-        setDisplayFontSize("64px");
-    } else if(displayLengthEqualsNumber(10)) {
-        setDisplayFontSize("58px");
-    }
 });
 
 backspaceBtn.addEventListener("click", () => {
@@ -178,17 +206,6 @@ function multiply(x, y) {
     return x * y;
 }
 
-function splitOnDecimal(num) {
-    return num.toString().split(".");
-}
-
-function roundToMaxDigits(num) {
-    let split = splitOnDecimal(num);
-    let wholeNumber = split[0];
-    
-    return parseFloat(num.toFixed(9 - wholeNumber.length));
-}
-
 function operate(x, op, y) {
     
     if(op === "+") {
@@ -202,8 +219,16 @@ function operate(x, op, y) {
         }
     } else if(op === "x") {
         result = multiply(x, y);
+    } else {
+        result = parseFloat(inputDisplay.textContent.replace(/,/g, ""));
     }
 
+    console.log(parseFloat(result));
+    console.log("length: " + result.toString().length);
+
+    if(result.toString().length > 9) {
+        console.log("LONGER THAN 9");
+    }
     setDisplayTextContent(result);
 
 }
@@ -265,11 +290,37 @@ function setSecondOperator(op) {
 }
 
 function negateNumber(num) {
+
+    num = parseFloat(num.replace(/,/g, ""));
     if(!isNaN(num)) {
         num = num - (num * 2);
     }
 
-    inputDisplay.textContent = num;
+    inputDisplay.textContent = formatter.format(num);
+
+    if(!inputDisplay.textContent.includes(".")) {
+        if(displayLengthEqualsNumber(7)) {
+            setDisplayFontSize("82px");
+        } else if(displayLengthEqualsNumber(8)) {
+            setDisplayFontSize("69px");
+        } else if(displayLengthEqualsNumber(9)) {
+            setDisplayFontSize("62px");
+        } else if(displayLengthEqualsNumber(10)) {
+            setDisplayFontSize("56px");
+        }
+    } else if(inputDisplay.textContent.includes(".")) {
+        if(displayLengthEqualsNumber(7)) {
+            setDisplayFontSize("95px");
+        } else if(displayLengthEqualsNumber(8)) {
+            setDisplayFontSize("85px");
+        } else if(displayLengthEqualsNumber(9)) {
+            setDisplayFontSize("75px");
+        } else if(displayLengthEqualsNumber(10)) {
+            setDisplayFontSize("67px");
+        } else if(displayLengthEqualsNumber(11)) {
+            setDisplayFontSize("58px");
+        }
+    }
 }
 
 function enableButtonStyle() {
@@ -291,7 +342,7 @@ function clearTextContent() {
 }
 
 function displayLengthEqualsNumber(num) {
-    if(inputDisplay.textContent.length === num) {
+    if(inputDisplay.textContent.replace(/,/g, "").length === num) {
         return true;
     } 
     
@@ -299,7 +350,7 @@ function displayLengthEqualsNumber(num) {
 }   
 
 function displayLengthGreaterThanOrEqualsNumber(num) {
-    if(inputDisplay.textContent.length >= num) {
+    if(inputDisplay.textContent.replace(/,/g, "").length >= num) {
         return true;
     }
 
@@ -317,10 +368,39 @@ function setSelectedButtonNull() {
 function setDisplayTextContent(str) {
     let num = parseFloat(String(str).replace(/,/g, '')); // Convert to string and remove commas
     if (!isNaN(num)) {
-        inputDisplay.textContent = formatter.format(num);
+        console.log("num: " + num);
+        console.log("num length: " + num.toString().length);
+        if(num > 999_999_999 || num < -999_999_999) {
+            let expo = parseFloat(num).toExponential(5).replace("+", "");
+            expo = parseFloat(expo).toExponential().replace("+", "");
+            inputDisplay.textContent = expo;
+        } else {
+            inputDisplay.textContent = formatter.format(num);
+        }
     } else {
         inputDisplay.textContent = str; // If not a number, just set the string directly
     }
+
+    if(!inputDisplay.textContent.includes(".")) {
+        if(displayLengthEqualsNumber(7)) {
+            setDisplayFontSize("78px");
+        } else if(displayLengthEqualsNumber(8)) {
+            setDisplayFontSize("69px");
+        } else if(displayLengthEqualsNumber(9)) {
+            setDisplayFontSize("62px");
+        }
+    } else if(inputDisplay.textContent.includes(".")) {
+        if(displayLengthEqualsNumber(8)) {
+            setDisplayFontSize("82px");
+        } else if(displayLengthEqualsNumber(9)) {
+            setDisplayFontSize("72px");
+        } else if(displayLengthEqualsNumber(10)) {
+            setDisplayFontSize("66px");
+        } else if(displayLengthEqualsNumber(11)) {
+            setDisplayFontSize("62px");
+        }
+    }
+
 }
 
 

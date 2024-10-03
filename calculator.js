@@ -427,8 +427,7 @@ function appendToDisplayTextContent(str) {
 
 function handleKeyPress(event) {
     if((event.key >= 0 && event.key <= 9 || event.key === ".")) {
-        let test = event.key;
-        clickNonOperator(test);
+        clickNonOperator(event.key);
     } else if(event.key === "+") {
         clickOperator("add");
     } else if(event.key === "-") {

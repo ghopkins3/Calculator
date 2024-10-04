@@ -18,6 +18,7 @@ however it currently only features the basic functionality of a calculator, and 
   - Includes images to emulate wifi, signal, and battery icons
   - Includes the iPhone typing and deleting sounds
 - Full keyboard support
+  - Tip: "/" is the hotkey for quick find in Firefox
 
 <h2>How to Use</h2>
 <ol>

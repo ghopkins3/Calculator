@@ -13,7 +13,10 @@ however it currently only features the basic functionality of a calculator, and 
   <li>Division</li>
 </ul>
 
-<p>- Full Keyboard Support</p>
+- UI made to replicate iPhone Calculator app
+  - Includes live system time display
+  - Includes images to emulate wifi, signal, and battery icons
+- Full keyboard support
 
 <h2>How to Use</h2>
 <ol>

@@ -1,0 +1,16 @@
+<h1>Is That My Phone? Nope, Just a Calculator</h1>
+<p>This is a simple implementation of a basic calculator using vanilla JavaScript. This project was created to practice and demonstrate basic JavaScript, HTML, and CSS skills.</p>
+<h3>How Is This Calculator Unique?</h3>
+<p>What sets this implementation apart from others is the use of HTML/CSS to create a nearly perfect replication of the user interface of the iPhone Calculator app, 
+however it currently only features the basic functionality of a calculator, and not the complete functionality of the iPhone app.</p>
+
+<h2>Features</h2>
+<p>The calculator can perform basic arithmetic operations: </p>
+<ul>
+  <li>Addition</li>
+  <li>Subtraction</li>
+  <li>Multiplication</li>
+  <li>Division</li>
+</ul>
+
+<p>- Full Keyboard Support</p>

@@ -363,14 +363,18 @@ function clickOperator(str) {
 
 function setDisplayTextContent(str) {
     let num = parseFloat(String(str).replace(/,/g, '')); 
+    let parts = num.toString().split(".");
+    let integerPart = parts[0];
+    let decimalPart = parts[1];
+
     console.log(num.toString().length);
     if (!isNaN(num)) {
         if(num > 999_999_999 || num < -999_999_999) {
             let expo = parseFloat(num).toExponential(5).replace("+", "");
             expo = parseFloat(expo).toExponential().replace("+", "");
             inputDisplay.textContent = expo;
-        } else if(num.toString().length > 9) {
-            inputDisplay.textContent = parseFloat(num).toExponential(3).replace("+", "");
+        } else if(num.toString().length > 9 && num.toString().includes(".") && num < 999_999_999 && num > -999_999_999) {
+            inputDisplay.textContent = formatter.format(parseFloat(num).toFixed(9 - integerPart.length));
         } else {
             inputDisplay.textContent = formatter.format(num);
         }
@@ -394,7 +398,7 @@ function setDisplayTextContent(str) {
         } else if(displayLengthEqualsNumber(10)) {
             setDisplayFontSize("66px");
         } else if(displayLengthEqualsNumber(11)) {
-            setDisplayFontSize("62px");
+            setDisplayFontSize("60px");
         }
     }
 }

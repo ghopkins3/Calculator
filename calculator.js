@@ -365,9 +365,7 @@ function setDisplayTextContent(str) {
     let num = parseFloat(String(str).replace(/,/g, '')); 
     let parts = num.toString().split(".");
     let integerPart = parts[0];
-    let decimalPart = parts[1];
-
-    console.log(num.toString().length);
+    
     if (!isNaN(num)) {
         if(num > 999_999_999 || num < -999_999_999) {
             let expo = parseFloat(num).toExponential(5).replace("+", "");

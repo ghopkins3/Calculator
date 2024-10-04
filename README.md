@@ -13,4 +13,14 @@ however it currently only features the basic functionality of a calculator, and 
   <li>Division</li>
 </ul>
 
-<p>- Full Keyboard Support</p>
+- UI made to replicate iPhone Calculator app
+  - Includes live system time display
+  - Includes images to emulate wifi, signal, and battery icons
+- Full keyboard support
+
+<h2>How to Use</h2>
+<ol>
+  <li>Open the index.html file in your browser or visit my site deployed using GitHub Pages: https://ghopkins3.github.io/Calculator/.</li>
+  <li>Click the buttons on the page or use your keyboard to input numbers and select operations.</li>
+  <li>The result of the calculation will be displayed on the screen.</li>
+</ol>

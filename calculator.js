@@ -173,6 +173,8 @@ backspaceBtn.addEventListener("click", () => {
         return;
     } else if(inputDisplay.textContent.length === 1) {
         clearTextContent();
+    } else if(inputDisplay.textContent === "-0") {
+        setDisplayTextContent("0");
     } else {
         setDisplayTextContent(inputDisplay.textContent.slice(0, -1));
     }

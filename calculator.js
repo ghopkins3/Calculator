@@ -80,7 +80,11 @@ numBtns.forEach((button) => {
         if(event.target.classList.contains("number") || event.target.classList.contains("decimal")) {
             iphoneTypeSound.play();
             if(inputDisplay.textContent === "0" || selectedButton) {
-                setDisplayTextContent(event.target.textContent);
+                if(inputDisplay.textContent === "-0") {
+                    setDisplayTextContent("-" + event.target.textContent);
+                } else {
+                    setDisplayTextContent(event.target.textContent);
+                }
             } else if(!inputDisplay.textContent.includes(".") && displayLengthGreaterThanOrEqualsNumber(9)) {
                 return;
             } else if(inputDisplay.textContent.includes(".")) {
@@ -153,7 +157,11 @@ signBtn.addEventListener("click", () => {
         return;
     }
 
-    negateNumber(inputDisplay.textContent);
+    if(selectedButton) {
+        inputDisplay.textContent = "-0";
+    } else {
+        negateNumber(inputDisplay.textContent);
+    }
 });
 
 backspaceBtn.addEventListener("click", () => {
@@ -291,6 +299,7 @@ function negateNumber(num) {
         } else if(displayLengthEqualsNumber(8)) {
             setDisplayFontSize("69px");
         } else if(displayLengthEqualsNumber(9)) {
+            console.log("HERE");
             setDisplayFontSize("62px");
         } else if(displayLengthEqualsNumber(10)) {
             setDisplayFontSize("56px");
@@ -371,7 +380,8 @@ function setDisplayTextContent(str) {
             let expo = parseFloat(num).toExponential(5).replace("+", "");
             expo = parseFloat(expo).toExponential().replace("+", "");
             inputDisplay.textContent = expo;
-        } else if(num.toString().length > 9 && num.toString().includes(".") && num < 999_999_999 && num > -999_999_999) {
+        } else if(num.toString().length > 9 && num.toString().length <= 11 && num.toString().includes(".") 
+                    && num < 999_999_999 && num > -999_999_999) {
             inputDisplay.textContent = formatter.format(parseFloat(num).toFixed(9 - integerPart.length));
         } else {
             inputDisplay.textContent = formatter.format(num);
@@ -387,6 +397,8 @@ function setDisplayTextContent(str) {
             setDisplayFontSize("69px");
         } else if(displayLengthEqualsNumber(9)) {
             setDisplayFontSize("62px");
+        } else if(displayLengthEqualsNumber(10)) {
+            setDisplayFontSize("56px");
         }
     } else if(inputDisplay.textContent.includes(".")) {
         if(displayLengthEqualsNumber(8)) {
@@ -397,6 +409,8 @@ function setDisplayTextContent(str) {
             setDisplayFontSize("66px");
         } else if(displayLengthEqualsNumber(11)) {
             setDisplayFontSize("60px");
+        } else if(displayLengthGreaterThanOrEqualsNumber(12)) {
+            setDisplayFontSize("53px");
         }
     }
 }
@@ -445,7 +459,7 @@ function handleKeyPress(event) {
     } else if(event.key === "Backspace") {
         clickNonOperator("backspace");
     } else if(event.key === "n") {
-        negateNumber(inputDisplay.textContent);
+        clickNonOperator("sign").click();
     }
 }
 

@@ -80,7 +80,9 @@ numBtns.forEach((button) => {
         if(event.target.classList.contains("number") || event.target.classList.contains("decimal")) {
             iphoneTypeSound.play();
             if(inputDisplay.textContent === "0" || selectedButton) {
-                if(inputDisplay.textContent === "-0") {
+                if(event.target.textContent === ".") {
+                    appendToDisplayTextContent(event.target.textContent);
+                } else if(inputDisplay.textContent === "-0") {
                     setDisplayTextContent("-" + event.target.textContent);
                 } else {
                     setDisplayTextContent(event.target.textContent);
@@ -175,6 +177,8 @@ backspaceBtn.addEventListener("click", () => {
         clearTextContent();
     } else if(inputDisplay.textContent === "-0") {
         setDisplayTextContent("0");
+    } else if(inputDisplay.textContent.length === 2 && inputDisplay.textContent.includes("-")) {
+        setDisplayTextContent(inputDisplay.textContent.slice(1));
     } else {
         setDisplayTextContent(inputDisplay.textContent.slice(0, -1));
     }
